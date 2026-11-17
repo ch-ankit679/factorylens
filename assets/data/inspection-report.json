@@ -1,0 +1,72 @@
+{
+  "project": "FACTORYLENS",
+  "version": "1.3.0",
+  "report_type": "Static demonstration inspection summary",
+  "report_basis": "Reconstructed from the supplied annotated MP4 and screen recording. The original server-generated JSON report was not included in the uploaded bundle.",
+  "source_video": {
+    "filename": "factory-input.mp4",
+    "title": "Industrial factory operation with machinery and workers",
+    "duration_seconds": 60.24,
+    "url": "assets/videos/factory-input.mp4",
+    "size_label": "Optimized H.264 \u00b7 720p"
+  },
+  "reviewed_clip_seconds": 25,
+  "analysis_summary": "The video shows industrial material handling operations involving loaders and manual shoveling. Visible observations include workers in close proximity to operating machinery and falling material, significant dust generation during dumping, a worker shoveling without a hard hat, and deteriorating wall conditions in the facility.",
+  "observations": [
+    {
+      "timestamp_seconds": 0,
+      "timestamp_label": "00:00",
+      "issue_type": "worker_machine_proximity",
+      "title": "WORKER STANDING NEAR ACTIVE MATERIAL DUMPING ZONE",
+      "severity": "high",
+      "confidence": "high",
+      "visible_evidence": "Worker figure visible on the platform next to the falling material stream.",
+      "why_it_matters": "Proximity to moving machinery and falling material poses struck-by or entanglement risks.",
+      "recommended_follow_up": "Ensure workers maintain a safe distance from operating equipment and discharge points."
+    },
+    {
+      "timestamp_seconds": 0,
+      "timestamp_label": "00:00",
+      "issue_type": "other_visible_condition",
+      "title": "VISIBLE DUST GENERATION DURING MATERIAL HANDLING",
+      "severity": "medium",
+      "confidence": "high",
+      "visible_evidence": "Hazy brownish dust cloud surrounding the bucket and hopper area.",
+      "why_it_matters": "Dust can reduce visibility and pose respiratory hazards.",
+      "recommended_follow_up": "Implement dust suppression measures or require respiratory protection."
+    },
+    {
+      "timestamp_seconds": 0,
+      "timestamp_label": "00:00",
+      "issue_type": "visible_crack_or_corrosion",
+      "title": "PEELING PAINT AND WALL DETERIORATION",
+      "severity": "low",
+      "confidence": "high",
+      "visible_evidence": "Large patches of missing paint/plaster on the white walls in the background.",
+      "why_it_matters": "The supplied recording does not show a more detailed risk rationale for this wall condition.",
+      "recommended_follow_up": "Have site maintenance review the affected wall surface."
+    },
+    {
+      "timestamp_seconds": 14,
+      "timestamp_label": "00:14",
+      "issue_type": "ppe_observation",
+      "title": "WORKER SHOVELING WITHOUT HARD HAT",
+      "severity": "medium",
+      "confidence": "high",
+      "visible_evidence": "Worker's head is bare in frames from 00:14 to 00:25.",
+      "why_it_matters": "Head protection is required in areas with overhead hazards or falling objects.",
+      "recommended_follow_up": "Enforce hard hat usage for all personnel in the work area."
+    }
+  ],
+  "recorded_context": {
+    "yolo_sample_moments": 18,
+    "yolo_object_boxes_displayed": 49,
+    "ai_issue_boxes_displayed": 0
+  },
+  "annotated_video": "../videos/main-annotated.mp4",
+  "limitations": [
+    "This is a precomputed browser replay; it does not run new inference.",
+    "Spatial points are reconstructed from the recorded dashboard plot; per-detection source coordinates were not supplied.",
+    "AI observations require confirmation by qualified site personnel."
+  ]
+}

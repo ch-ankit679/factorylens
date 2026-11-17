@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FACTORYLENS | Industrial Video Intelligence</title>
+  <link rel="stylesheet" href="./styles.css?v=1.1.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-lockup">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div><div class="brand-name">FACTORY<span>LENS</span></div><div class="brand-sub">INDUSTRIAL INTELLIGENCE</div></div>
+      </div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-page="video"><span class="nav-icon">▣</span> Video inspection <span class="nav-pill">AI</span></button>
+        <button class="nav-item" data-page="events"><span class="nav-icon">≡</span> Event history</button>
+        <details class="nav-more">
+          <summary><span class="nav-icon">＋</span> More tools</summary>
+          <div class="nav-more-items">
+            <button class="nav-item" data-page="live"><span class="nav-icon">◉</span> Live camera</button>
+            <button class="nav-item" data-page="motion"><span class="nav-icon">⌁</span> Motion analysis</button>
+            <button class="nav-item" data-page="sensors"><span class="nav-icon">∿</span> Sensor analysis</button>
+            <button class="nav-item" data-page="guide"><span class="nav-icon">◇</span> How it works</button>
+          </div>
+        </details>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="system-card"><div class="system-top"><span class="status-dot"></span><span>SYSTEM STATUS</span><strong id="sidebar-status">READY</strong></div><div class="system-meta">Industrial video intelligence workspace</div></div>
+        <div class="version-label">BUILD 1.3.0 · INDUSTRIAL INTELLIGENCE</div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div><div class="breadcrumb">INDUSTRIAL OPERATIONS <span>/</span> <b id="page-breadcrumb">VIDEO</b></div><h1 id="page-title">Video inspection</h1></div>
+        <div class="topbar-right"><div class="demo-chip"><span class="status-dot"></span> AI VIDEO REVIEW</div><div class="avatar">FL</div></div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="page" id="page-overview">
+          <div class="hero-band">
+            <div class="hero-copy"><div class="eyebrow">VIDEO-FIRST INDUSTRIAL INTELLIGENCE</div><h2>See the operation.<br/><em>Surface what needs attention.</em></h2><p>Upload real factory footage and let AI review the full clip for visible safety and machinery concerns. Findings are timestamped, explained and highlighted directly in the annotated video.</p><div class="hero-actions"><button class="btn btn-primary" data-go="video">Start video inspection <span>→</span></button><button class="btn btn-ghost" data-go="guide">Explore the system</button></div></div>
+            <div class="hero-visual"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="visual-core"><div class="core-cross">＋</div><div class="core-text">VISION<br/>ENGINE</div></div><div class="float-tag tag-top"><span class="tiny-pulse"></span> VIDEO ANALYTICS</div><div class="float-tag tag-bottom">FRAME → DETECT → REVIEW</div></div>
+          </div>
+          <div class="section-heading"><div><div class="eyebrow">LIVE WORKSPACE</div><h3>Inspection activity</h3></div><span class="muted small" id="last-refresh">Local session</span></div>
+          <div class="metric-grid">
+            <article class="metric-card"><div class="metric-label">COMPLETED INSPECTIONS</div><div class="metric-value" id="metric-inspections">0</div><div class="metric-foot"><span class="metric-icon blue">▣</span> This server session</div></article>
+            <article class="metric-card"><div class="metric-label">YOLO SAMPLE MOMENTS</div><div class="metric-value" id="metric-frames">0</div><div class="metric-foot"><span class="metric-icon cyan">◫</span> Recorded sample timestamps</div></article>
+            <article class="metric-card"><div class="metric-label">AI ISSUE FINDINGS</div><div class="metric-value" id="metric-findings">0</div><div class="metric-foot"><span class="metric-icon amber">⚑</span> Video-understanding findings for review</div></article>
+            <article class="metric-card"><div class="metric-label">VIDEO SAMPLES</div><div class="metric-value" id="metric-videos">0</div><div class="metric-foot"><span class="metric-icon green">▷</span> Real source clips downloaded</div></article>
+          </div>
+          <div class="overview-grid">
+            <article class="panel video-library-panel"><div class="panel-head"><div><div class="eyebrow">SOURCE FOOTAGE</div><h3>Factory video library</h3></div><button class="text-button" data-go="video">Open inspection →</button></div><div id="overview-videos" class="video-mini-list"><div class="empty-state compact">Loading video library…</div></div></article>
+            <article class="panel workflow-panel"><div class="panel-head"><div><div class="eyebrow">PROCESSING PIPELINE</div><h3>How FACTORYLENS works</h3></div></div><div class="pipeline"><div class="pipeline-step"><div class="pipeline-index">01</div><div><b>Capture</b><span>Local factory video or browser camera</span></div></div><div class="pipeline-line"></div><div class="pipeline-step"><div class="pipeline-index">02</div><div><b>Perceive</b><span>YOLO object detection on sampled frames</span></div></div><div class="pipeline-line"></div><div class="pipeline-step"><div class="pipeline-index">03</div><div><b>Evaluate</b><span>AI video understanding and automated issue extraction</span></div></div><div class="pipeline-line"></div><div class="pipeline-step"><div class="pipeline-index">04</div><div><b>Review</b><span>Annotated evidence and human decision</span></div></div></div></article>
+          </div>
+          <div class="notice-bar"><span class="notice-icon">i</span><div><b>Review guidance:</b> Issue-level analysis uses a video-understanding model to describe visibly supported concerns. A separate local YOLO model draws people and common-object boxes. Results are suggestions for qualified human review, not confirmed faults or safety violations.</div></div>
+        </section>
+
+        <section class="page active" id="page-video">
+          <div class="page-intro simple-page-intro">
+            <div><div class="eyebrow">FACTORY VIDEO REVIEW</div><h2>Find the moments that matter.</h2><p>Choose a factory clip. FactoryLens marks visible events, lets you jump to their exact time, and compares AI reviewers on the same footage. No manual zones are required.</p></div>
+            <div class="engine-badge"><span class="status-dot"></span><span>YOLO + AI VIDEO REVIEW</span></div>
+          </div>
+          <div class="inspection-layout simple-inspection-layout">
+            <div class="panel input-panel simple-source-panel">
+              <div class="step-heading"><span class="step-number">01</span><div><h3>Choose a video</h3><p>Select a factory video to begin the inspection.</p></div></div>
+              <label class="field-label" for="sample-select">Factory video library</label>
+              <select id="sample-select" class="field"><option value="">Loading factory videos…</option></select>
+              <div class="source-divider"><span>OR</span></div>
+              <label class="upload-drop simple-upload" for="video-file"><span class="upload-icon">↑</span><b>Additional video input</b><small>Select a factory clip from the video library above</small><input id="video-file" type="file" accept="video/*,.ogv" disabled /></label>
+              <div class="selected-source" id="selected-source">Choose a video from the factory library to continue.</div>
+              <details class="advanced-options"><summary>Review options</summary>
+                <div class="field-row"><label class="field-label" for="confidence">YOLO detection sensitivity <b id="confidence-value">0.35</b></label><input type="range" id="confidence" min="0.1" max="0.9" step="0.05" value="0.35" /></div>
+                <div class="field-row"><label class="field-label" for="duration">Review length</label><select id="duration" class="field"><option value="15">First 15 seconds</option><option value="25" selected>First 25 seconds</option><option value="45">First 45 seconds</option><option value="60">First 60 seconds</option><option value="90">First 90 seconds</option></select></div>
+              </details>
+              <div class="model-status-card compact-model-status" id="model-status-card"><span class="status-dot"></span><div><b id="model-status-title">Inspection workspace ready</b><small id="model-status-copy">Select a factory clip to review timestamped observations and annotated footage.</small></div></div>
+              <button class="btn btn-primary btn-wide" id="analyse-video-btn">Start inspection <span>→</span></button>
+              <div class="model-note" id="model-note">Review timestamped observations, annotated footage and supporting context.</div>
+              <div class="source-library-meta"><span id="library-count">0 / 15 READY</span><span id="video-library-note">Sample clips available</span></div>
+            </div>
+            <div class="panel preview-panel simple-preview-panel">
+              <div class="panel-head"><div><div class="eyebrow">VIDEO</div><h3 id="preview-title">Your footage appears here</h3></div><span class="status-label" id="preview-status">READY</span></div>
+              <div class="video-stage simple-video-stage"><video id="source-player" class="hidden" controls preload="metadata"></video><div class="video-placeholder" id="video-placeholder"><div class="play-outline">▷</div><b>Choose a factory video to begin</b><span>Your original footage will appear here before inspection.</span></div></div>
+              <div id="analysis-progress-wrap" class="progress-wrap hidden"><div class="progress-meta"><span id="progress-label">Preparing video review…</span><b id="progress-percent">0%</b></div><div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div></div>
+              <div id="analysis-result" class="analysis-result hidden">
+                <div class="result-title"><div><div class="eyebrow">INSPECTION COMPLETE</div><h3>Events found in your video</h3></div><span class="status-label success">READY</span></div>
+                <div id="analysis-summary" class="analysis-summary"></div>
+                <div class="annotated-player-wrap"><video id="annotated-player" controls playsinline preload="metadata"></video></div>
+                <div class="timeline-section"><div class="timeline-heading"><div><b>Event timeline</b><small>Choose a timestamp to jump straight to that moment.</small></div><span class="timeline-count" id="event-count-label">0 events</span></div><div id="event-timeline" class="event-timeline"><div class="empty-state">Event timestamps will appear after inspection.</div></div></div>
+                <div class="observation-section simple-observation-section"><div class="eyebrow">WHAT WAS OBSERVED</div><div id="event-explanations" class="observation-list"><div class="empty-state">No findings generated yet.</div></div></div>
+                <details class="advanced-visual-details"><summary>View activity heatmaps</summary>
+                  <div class="heatmap-workbench" id="heatmap-workbench">
+                    <div class="heatmap-heading"><div><div class="eyebrow">TIME × LOCATION</div><h3>Hazard activity map</h3><p>Choose a time cell to jump to that moment in the annotated video.</p></div></div>
+                    <div class="heatmap-grid">
+                      <section class="heatmap-panel"><div class="heatmap-panel-title"><div><b>When events appeared</b><small>AI observations across the clip</small></div></div><div id="temporal-heatmap" class="temporal-heatmap"><div class="empty-state">Heatmap data appears after inspection.</div></div></section>
+                      <section class="heatmap-panel"><div class="heatmap-panel-title"><div><b>Where findings appeared</b><small>Only when the model provides a valid location</small></div></div><canvas id="spatial-heatmap" width="720" height="420"></canvas><div id="spatial-heatmap-note" class="heatmap-note">No spatial data yet.</div></section>
+                    </div>
+                    <div class="heatmap-footnote">YOLO object presence is shown as context, not as a confirmed hazard. Heat intensity is a visual summary, not a calibrated risk score.</div>
+                  </div>
+                </details>
+                <details class="advanced-visual-details technical-details"><summary>Inspection details and warnings</summary><div class="provider-line" id="analysis-provider"></div><div class="result-metrics" id="result-metrics"></div><div id="analysis-warnings" class="analysis-warnings hidden"></div><div class="result-actions"><a class="btn btn-secondary" id="download-annotated" download>Download annotated video</a><a class="btn btn-ghost" id="download-report">Download report</a></div></details>
+              </div>
+              <div class="empty-analysis" id="empty-analysis"><div class="empty-icon">⌁</div><b>Waiting for a video</b><span>Choose or upload footage, then select Inspect video.</span></div>
+            </div>
+          </div>
+
+          <section class="panel model-benchmark-panel simple-benchmark-panel hidden" id="benchmark-panel">
+            <div class="benchmark-intro"><div><div class="eyebrow">SECOND OPINION · FREE AI MODELS</div><h3>See how different AI reviewers interpret the same video</h3><p>Each model reviews the same footage. YOLO object boxes stay visible as a shared reference.</p></div><span class="status-label">SAME VIDEO · SAME YOLO</span></div>
+            <div id="benchmark-model-options" class="benchmark-model-options"><div class="muted small">Loading available free AI reviewers…</div></div>
+            <div class="benchmark-controls"><select id="benchmark-duration" class="field hidden"><option value="25" selected>25 seconds</option></select><button class="btn btn-primary" id="run-model-benchmark">Compare selected AI reviewers <span>→</span></button></div>
+            <div id="benchmark-progress-wrap" class="progress-wrap hidden"><div class="progress-meta"><span id="benchmark-progress-label">Preparing the comparison…</span><b id="benchmark-progress-percent">0%</b></div><div class="progress-track"><div id="benchmark-progress-bar" class="progress-bar"></div></div></div>
+            <div id="benchmark-results" class="benchmark-results hidden"></div>
+            <div class="heatmap-footnote">Free providers may be rate-limited. Model agreement is not proof of accuracy. YOLO boxes show people/common objects and are not hazard labels.</div>
+          </section>
+          <div class="panel detection-legend simple-legend"><div><div class="legend-swatch person"></div><span>YOLO object context</span></div><div><div class="legend-swatch issue"></div><span>AI issue observation</span></div><div class="legend-disclaimer">Every AI observation is a review candidate, not a certified safety finding.</div></div>
+        </section>
+
+        <section class="page" id="page-live">
+          <div class="page-intro"><div><div class="eyebrow">BROWSER CAMERA · PERIODIC INFERENCE</div><h2>Live camera inspection</h2><p>Use a browser camera to capture periodic frames and request detector inference. This is a local prototype, not a certified continuous safety-monitoring system.</p></div><span class="status-label" id="camera-status">CAMERA OFF</span></div>
+          <div class="live-grid"><div class="panel live-panel"><div class="panel-head"><div><div class="eyebrow">LIVE VIDEO FEED</div><h3>Camera preview</h3></div><button class="btn btn-secondary btn-small" id="switch-camera">Switch camera</button></div><div class="live-stage"><video id="live-video" autoplay muted playsinline></video><canvas id="live-canvas"></canvas><div class="live-placeholder" id="live-placeholder"><div class="camera-symbol">◉</div><b>Camera not started</b><span>Grant browser permission to begin a local camera session.</span></div></div><div class="live-controls"><button class="btn btn-primary" id="start-camera">Start camera</button><button class="btn btn-ghost" id="stop-camera" disabled>Stop camera</button><span class="muted small" id="live-hint">Camera preview is ready. Start the camera to view the live feed.</span></div></div><div class="panel live-stats"><div class="eyebrow">CURRENT SESSION</div><h3>Detection summary</h3><div class="live-stat-row"><span>People detected</span><b id="live-people">0</b></div><div class="live-stat-row"><span>Vehicles detected</span><b id="live-vehicles">0</b></div><div class="live-stat-row"><span>Frames analysed</span><b id="live-frames">0</b></div><div class="section-rule"></div><div class="notice-bar compact-notice"><span class="notice-icon">!</span><div>Point the camera at a controlled demonstration scene. Do not use a personal phone as the sole safeguard around live machinery.</div></div><div id="live-error" class="inline-error hidden"></div></div></div>
+        </section>
+
+        <section class="page" id="page-motion">
+          <div class="page-intro"><div><div class="eyebrow">OPTICAL FLOW · TIME-SERIES SCREENING</div><h2>Motion analysis</h2><p>Estimate frame-to-frame motion in a video and flag unusual changes relative to that clip's own baseline. This is a screening signal, not a fault diagnosis.</p></div><span class="status-label">VIDEO-BASED</span></div>
+          <div class="motion-layout"><div class="panel input-panel"><div class="eyebrow">SELECT VIDEO</div><h3>Motion source</h3><label class="field-label" for="motion-sample">Downloaded factory video</label><select id="motion-sample" class="field"><option value="">Loading…</option></select><div class="source-divider"><span>OR UPLOAD</span></div><label class="upload-drop compact-upload" for="motion-file"><span class="upload-icon">↑</span><b>Choose video for motion analysis</b><small>Video footage only</small><input type="file" id="motion-file" accept="video/*,.ogv" disabled /></label><button class="btn btn-primary btn-wide" id="run-motion" disabled>Motion output not included</button></div><div class="panel motion-panel"><div class="panel-head"><div><div class="eyebrow">MOTION PROFILE</div><h3>Frame-to-frame movement</h3></div><span class="status-label" id="motion-label">AWAITING SOURCE</span></div><canvas id="motion-chart" width="900" height="300"></canvas><div id="motion-summary" class="muted small">No motion-analysis result is currently loaded for this video.</div><div id="motion-events" class="event-list"></div></div></div>
+        </section>
+
+        <section class="page" id="page-sensors">
+          <div class="page-intro"><div><div class="eyebrow">CONDITION MONITORING · SIGNAL PROCESSING</div><h2>Sensor analysis</h2><p>Upload a vibration CSV to review signal statistics and frequency components. The output supports condition monitoring and does not assign a confirmed bearing or motor fault.</p></div><span class="status-label">CSV INPUT</span></div>
+          <div class="sensor-layout"><div class="panel input-panel"><div class="eyebrow">SENSOR DATA INPUT</div><h3>Upload vibration CSV</h3><label class="upload-drop" for="sensor-file"><span class="upload-icon">↑</span><b>Select sensor data file</b><small>CSV with a vibration / acceleration / accel / amplitude column</small><input type="file" id="sensor-file" accept=".csv,text/csv" disabled /></label><div id="sensor-file-label" class="selected-source">No sensor CSV selected</div><button class="btn btn-primary btn-wide" id="analyse-sensor" disabled>Sensor output not included</button><p class="muted small">For frequency in Hz, include a known sampling rate in your engineering context. Frequency-bin indices alone are not physical frequencies.</p></div><div class="panel sensor-results"><div class="eyebrow">SIGNAL SUMMARY</div><h3>Computed features</h3><div id="sensor-empty" class="empty-analysis in-panel"><div class="empty-icon">∿</div><b>No sensor data loaded</b><span>Upload a real CSV from a compatible sensor or data logger.</span></div><div id="sensor-metrics" class="sensor-metrics hidden"></div><canvas id="sensor-chart" width="900" height="260"></canvas><div class="muted small" id="sensor-note"></div></div></div>
+        </section>
+
+        <section class="page" id="page-events">
+          <div class="page-intro"><div><div class="eyebrow">AUDITABLE OBSERVATIONS</div><h2>Event register</h2><p>Review timestamped AI observations from videos. Each item includes what was visible and why it may deserve inspection.</p></div><button class="btn btn-secondary" id="refresh-events">Refresh events</button></div>
+          <div class="panel table-panel"><div class="table-top"><div><div class="eyebrow">RECORDED DEMO OBSERVATIONS</div><h3>Recognised issue · Visual evidence</h3></div><span class="status-label">HUMAN REVIEW REQUIRED</span></div><div class="table-scroll"><table><thead><tr><th>VIDEO TIME</th><th>SOURCE</th><th>WHAT HAPPENED</th><th>WHY FLAGGED</th><th>MODEL CONFIDENCE</th><th>REVIEW STATUS</th></tr></thead><tbody id="events-body"><tr><td colspan="6" class="table-empty">No observations yet. Run a video inspection first.</td></tr></tbody></table></div></div>
+        </section>
+
+        <section class="page" id="page-guide">
+          <div class="page-intro"><div><div class="eyebrow">PROJECT OVERVIEW · TECHNICAL METHOD</div><h2>How FACTORYLENS works</h2><p>An integrated workflow combining video understanding, object detection, visual evidence and structured reporting.</p></div><span class="status-label">TECHNICAL GUIDE</span></div>
+          <div class="guide-hero"><div class="eyebrow">THE ENGINEERING PROBLEM</div><h2>Industrial video contains evidence.<br/><em>Finding the important moments takes time.</em></h2><p>FACTORYLENS reviews factory footage, identifies visible conditions that may need attention, highlights those moments in the video and produces a structured inspection summary. It does not require operators to draw inspection zones or select manual rules.</p></div>
+          <div class="guide-grid">
+            <article class="panel guide-card"><div class="guide-num">01</div><h3>Video understanding</h3><p>Representative frames from the selected clip are reviewed by a multimodal vision model and converted into timestamped visual observations.</p><div class="tech-tag">OpenRouter vision analysis · sampled frames · JSON observations</div></article>
+            <article class="panel guide-card"><div class="guide-num">02</div><h3>Object localisation</h3><p>YOLO localises people and common objects, adding spatial context to the model-generated visual observations.</p><div class="tech-tag">YOLO26n · COCO classes · OpenCV</div></article>
+            <article class="panel guide-card"><div class="guide-num">03</div><h3>Readable video annotations</h3><p>AI findings are matched to their timestamps and overlaid as large, high-contrast issue banners. If the model provides a reliable frame-relative box, the relevant region is outlined as well.</p><div class="tech-tag">Timestamp alignment · OpenCV · H.264 export</div></article>
+            <article class="panel guide-card"><div class="guide-num">04</div><h3>Evidence and reporting</h3><p>Each finding stores the visible evidence, description, why it may matter, qualitative confidence, timestamp and suggested follow-up. Findings remain review candidates and can be checked against the original footage.</p><div class="tech-tag">FastAPI · SQLite · JSON report</div></article>
+          </div>
+          <div class="panel guide-table"><div class="eyebrow">PLATFORM CAPABILITIES</div><h3>From factory footage to review-ready evidence</h3><div class="status-matrix"><div><b>Automated video review</b><span>Inspect industrial footage with object localisation and multimodal visual analysis.</span></div><div><b>AI model benchmarking</b><span>Compare multiple vision-language models on the same footage and review their timestamped findings.</span></div><div><b>Evidence and reporting</b><span>Explore annotated video, event timelines, activity heatmaps and structured inspection reports.</span></div></div></div>
+          <div class="notice-bar"><span class="notice-icon">!</span><div><b>Data and safety:</b> When OpenRouter vision analysis is enabled, representative frames from uploaded clips are sent to the configured OpenRouter model. Use public sample footage or recordings you are authorised to share. Results are AI-assisted observations—not certified safety findings, machine diagnoses or a replacement for guards, interlocks, emergency stops or qualified inspections.</div></div>
+        </section>
+      </div>
+      <footer class="footer"><span>FACTORYLENS <b>·</b> Industrial Safety & Condition Monitoring Research Prototype</span><span>VIDEO REVIEW · HUMAN REVIEW REQUIRED</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="./assets/data/demo-data.js?v=1.1.0"></script>
+  <script src="./app.js?v=1.1.0"></script>
+</body>
+</html>
