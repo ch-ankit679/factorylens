@@ -1,40 +1,56 @@
-# FACTORYLENS — Interactive Static Demo
+# FACTORYLENS — GitHub Pages Demo
 
-This GitHub Pages package reproduces the supplied FactoryLens V1.3 inspection experience using the original project's HTML/CSS layout and the supplied recorded video assets.
+This repository is a static, browser-based replay of the latest FactoryLens interface shown in the two supplied screen recordings. It includes the 60-second factory source video, the main annotated inspection output, and the three latest model-specific annotated outputs.
 
-## What works in this static demo
+## Included workflow
 
-- Prepared input video preview and replay.
-- Simulated inspection progress followed by the saved main annotated MP4 and recorded observations.
-- Timestamp buttons that seek the annotated video.
-- Temporal and spatial heatmap visualization from the recorded dashboard.
-- Three model tabs, each playing its own model-specific annotated MP4.
-- Sequential playback of the three model videos.
-- Event register populated from the recorded observations.
-- Downloadable JSON summaries.
-- Camera preview only (no live inference).
+1. Open **Video inspection**. The supplied 60-second factory source clip is preloaded.
+2. Select **Inspect video**. The page shows a short replay progress sequence and then loads the recorded 25-second main annotated output.
+3. Use the six-item event timeline or the observation cards to seek to an event timestamp. The selected event is highlighted, and the page remains in place while the video seeks.
+4. Open **Visual model comparison** and start **Compare selected AI reviewers**. The page displays the three-model loading progress (including each model being rendered) before opening the saved comparison results.
+5. Select **Play all model videos** to play the three model-specific clips in sequence.
+6. Review the event cards, YOLO subject association status, cross-model corroboration, heatmaps, scorecard, technical metrics, and downloadable JSON reports.
 
-## What it does not do
+## Files
 
-This is a precomputed replay, not a live copy of the backend. It does not run Python, FastAPI, YOLO, OpenCV, OpenRouter, motion analysis, vibration analysis, or new video inference. Selecting **Replay saved inspection** and **Compare selected AI reviewers** replays the prepared outputs included in `assets/videos/`.
+- `index.html`, `styles.css`, `app.js` — responsive front end and replay interactions.
+- `assets/data/demo-data.json` — human-readable data for the replay.
+- `assets/data/demo-data.js` — browser-loaded version of the same data.
+- `assets/data/inspection-report.json` — downloadable inspection report.
+- `assets/data/model-comparison-report.json` — downloadable multi-model comparison report.
+- `assets/videos/factory-input.mp4` — 60.24-second source video.
+- `assets/videos/main-annotated.mp4` — main 25-second annotated inspection output.
+- `assets/videos/nemotron-3-5-super-vl.mp4` — Nemotron 3.5 Super VL output.
+- `assets/videos/nemotron-3-nano-omni.mp4` — Nemotron 3 Nano Omni 30B A3B output.
+- `assets/videos/ling-3-2-flash.mp4` — Ling 3.2 Flash output.
 
 ## Deploy to GitHub Pages
 
-1. Create a **public** GitHub repository named `factorylens-demo` (public repository required for GitHub Free Pages).
-2. Extract this package and push all its contents to the repository's `main` branch.
-3. Open repository **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
-4. The workflow `.github/workflows/deploy-pages.yml` copies only `index.html`, `styles.css`, `app.js` and `assets/` into the Pages artifact, then publishes it automatically.
-5. Open `https://YOUR_USERNAME.github.io/factorylens-demo/` after the Actions workflow succeeds.
+1. Create a GitHub repository and upload the **contents** of this folder to its `main` branch. Do not upload the parent ZIP as a single file.
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, choose **GitHub Actions** as the source.
+4. The included `.github/workflows/deploy-pages.yml` deploys the site after each push to `main`.
+5. When the workflow succeeds, open the Pages URL displayed in the repository's Pages settings or in the workflow deployment summary.
 
-No Render, backend, secrets, API key, or paid hosting is required for this static demo.
+No Python runtime, API key, server, database, or external model provider is needed to publish or view this replay. The model-comparison progress is a timed loading replay of the precomputed outputs, not a live inference run.
 
-## Media assets
+## Important capability boundary
 
-The 60-second input and four 25-second annotated outputs were re-encoded to H.264 1280×720 with fast-start metadata for browser playback and smaller GitHub Pages downloads. The 7m20 screen recording was used as the visual/result reference and is not bundled into the public site to avoid duplicating a large screen-capture file.
+GitHub Pages serves static files only. It cannot run the original FastAPI backend, YOLO/OpenCV inference, or OpenRouter model requests. This demo therefore reproduces the recorded interface and interactions using the supplied, precomputed MP4 outputs and recorded report values. It does **not** analyse arbitrary newly uploaded videos. An additional upload can be previewed in the browser, but the saved inspection results remain tied to the included factory source clip.
 
-## Report provenance
+The original source recording did not include the backend's raw JSON response payloads. The report values and event descriptions have been transcribed from the visible screen recordings and annotated clips. The scorecard uses the values visible in the latest recording. Heatmap subject coordinates are approximate visual reconstructions because exact coordinates were not supplied.
 
-The uploaded ZIP contained MP4 videos and the screen recording, but not the original JSON report files. The JSON summaries under `assets/data/` are reconstructed only from the visible text/results in those supplied assets. Provider latency, token counts, exact detector frame counts and other unshown fields are intentionally omitted.
+## Model comparison scorecard
+
+The recorded comparison shows:
+
+| Relative result | Model | Score |
+|---|---|---:|
+| BEST | Ling 3.2 Flash | 64.7 / 100 |
+| BETTER | Nemotron 3 Nano Omni 30B A3B | 62.5 / 100 |
+| GOOD | Nemotron 3.5 Super VL | 40.0 / 100 |
+
+The score uses the recorded weights: YOLO subject alignment 35%, cross-model corroboration 25%, structured output completeness 12%, response speed 12%, token efficiency 8%, and provider-reported cost efficiency 8% when cost is available for every completed model. These are relative run rankings, not ground-truth accuracy scores. Model agreement is a consistency signal, not proof that an observation is true.
 
 ## Safety note
 
