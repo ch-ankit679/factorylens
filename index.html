@@ -4,14 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d171e">
-  <meta name="description" content="FactoryLens industrial video inspection demo">
+  <meta name="description" content="FactoryLens industrial video inspection demo with evidence-linked annotations and recorded multi-model comparison.">
   <title>FACTORYLENS | Industrial Intelligence</title>
   <link rel="icon" href="assets/videos/factory-input.jpg" type="image/jpeg">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Open navigation" aria-controls="workspace-sidebar" aria-expanded="false">
+      <span class="hamburger-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+    <aside class="sidebar" id="workspace-sidebar">
       <a class="brand-lockup" href="#video" aria-label="FactoryLens home">
         <div class="brand-mark"><i></i><i></i><i></i></div>
         <div class="brand-copy"><div class="brand-name">FACTORY<span>LENS</span></div><div class="brand-sub">INDUSTRIAL INTELLIGENCE</div></div>
@@ -32,6 +36,7 @@
       <div class="sidebar-bottom">
         <div class="system-card">
           <div class="system-top"><span class="status-dot"></span><span>LOCAL SYSTEM</span><strong>ONLINE</strong></div>
+          <div class="system-meta">Video-first inspection prototype</div>
         </div>
         <div class="version-label">BUILD 1.3.0 · OPENROUTER VISION</div>
       </div>
@@ -42,11 +47,12 @@
         <div class="workspace-intro">
           <div class="eyebrow">FACTORYLENS / INDUSTRIAL VIDEO REVIEW</div>
           <h1>Video inspection</h1>
+          <p>Review factory footage, inspect timestamped observations, and compare the saved interpretations from three vision models.</p>
         </div>
 
         <section class="panel source-panel" id="source-section">
           <div class="panel-head source-panel-head">
-            <div><div class="eyebrow">VIDEO INPUT</div><h2>Choose a factory video</h2></div>
+            <div><div class="eyebrow">VIDEO INPUT</div><h2>Choose a factory video</h2><p class="panel-subtitle">The included factory clip is preloaded as the recorded demo source.</p></div>
             <span class="status-label" id="source-status">READY</span>
           </div>
           <div class="source-controls">
@@ -56,7 +62,7 @@
                 <option value="factory-input">Industrial factory operation with machinery and workers · 01:00</option>
               </select>
             </div>
-            <label class="upload-control" for="video-file"><span class="upload-symbol">↑</span><span><b>Choose another video</b></span><input id="video-file" type="file" accept="video/*"></label>
+            <label class="upload-control" for="video-file"><span class="upload-symbol">↑</span><span><b>Choose another video</b><small>Preview only in this GitHub Pages replay</small></span><input id="video-file" type="file" accept="video/*"></label>
             <button type="button" class="btn btn-primary inspect-button" id="analyse-video-btn">Inspect video <span>→</span></button>
           </div>
           <div class="selected-source" id="selected-source">01_factory_machinery_workers_pexels.mp4 · 60.24 seconds</div>
@@ -90,11 +96,7 @@
             </div>
             <aside class="event-column" aria-label="Event timeline and observations">
               <div class="timeline-heading"><div><b>Event timeline</b><small>Choose a timestamp to jump straight to that moment.</small></div><span class="timeline-count" id="event-count-label">6 events</span></div>
-              <div class="event-timeline" id="event-timeline"></div>
-              <div class="observation-section">
-                <div class="observation-section-head"><div class="eyebrow">WHAT WAS OBSERVED</div><span>AI observations</span></div>
-                <div class="observation-list" id="event-explanations"></div>
-              </div>
+              <div class="event-timeline" id="event-timeline" aria-label="Timestamped events. Expand an event to read what was observed."></div>
             </aside>
           </div>
 
