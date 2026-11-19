@@ -5,7 +5,7 @@ FactoryLens is an AI-assisted industrial video review prototype. It combines vis
 > **This repository contains the GitHub Pages showcase version of FactoryLens.** It is a static, browser-based replay of a recorded inspection and model-comparison run. It is not the live Python/FastAPI application and does not perform new AI inference.
 
 <p align="center">
-  <strong>Live demo:</strong> <code>https://&lt;GITHUB_USERNAME&gt;.github.io/&lt;REPOSITORY_NAME&gt;/</code>
+  <strong>Live demo:</strong> <code>https://&lt;ch-ankit679&gt;.github.io/&lt;factorylens&gt;/</code>
 </p>
 
 Replace the URL above with the repository's actual GitHub Pages address after deployment.
