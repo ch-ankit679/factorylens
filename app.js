@@ -7,13 +7,19 @@
     return;
   }
   const $ = (id) => document.getElementById(id);
-  const mainEvents = DATA.inspection.events || [];
-  const models = DATA.models || [];
+  let CURRENT_DATA = DATA;
+  const DATASETS = {
+    'factory-materials': DATA,
+    'factory-walkway': window.FACTORYLENS_SECOND_DEMO_DATA || null
+  };
+  let mainEvents = CURRENT_DATA.inspection.events || [];
+  let models = CURRENT_DATA.models || [];
   let activeMainEventId = mainEvents[0]?.id || null;
   let expandedMainEventId = null;
   let activeModelId = models[0]?.model_id || null;
   let activeModelEventId = null;
-  let activeScoreModelId = DATA.comparison.ranked_model_ids[0];
+  let expandedModelEventId = null;
+  let activeScoreModelId = CURRENT_DATA.comparison.ranked_model_ids[0];
   let hasCustomUpload = false;
   let currentObjectUrl = null;
   let compareSequenceActive = false;
@@ -33,7 +39,7 @@
     return `${String(minutes).padStart(2, '0')}:${String(secondsPart).padStart(2, '0')}`;
   };
   const modelById = (id) => models.find((item) => item.model_id === id);
-  const scoreById = (id) => DATA.comparison.scores[id];
+  const scoreById = (id) => CURRENT_DATA.comparison.scores[id];
 
   let toastTimer = null;
   function toast(message, error = false) {
@@ -98,22 +104,82 @@
 
   function loadSourceVideo() {
     const player = $('source-player');
-    player.src = DATA.source_video.url;
-    player.poster = DATA.source_video.poster;
+    player.pause();
+    player.src = CURRENT_DATA.source_video.url;
+    player.poster = CURRENT_DATA.source_video.poster;
     player.load();
-    $('selected-source').textContent = `${DATA.source_video.filename} · ${DATA.source_video.duration_seconds.toFixed(2)} seconds`;
+    $('selected-source').textContent = `${CURRENT_DATA.source_video.filename} · ${CURRENT_DATA.source_video.duration_seconds.toFixed(2)} seconds`;
     $('source-status').textContent = 'READY';
+    $('source-foot-message').textContent = 'Waiting for a video inspection.';
   }
 
-  $('sample-select').addEventListener('change', () => {
-    hasCustomUpload = false;
-    $('video-file').value = '';
+  function resetRecordedResults() {
+    modelComparisonTimers.forEach((timer) => clearTimeout(timer));
+    modelComparisonTimers = [];
+    modelComparisonLoading = false;
+    modelComparisonLoaded = false;
+    compareSequenceActive = false;
+    compareSequenceIndex = 0;
+    compareSequenceIds = [];
+    $('inspection-results').classList.add('hidden');
+    $('comparison-section').classList.add('hidden');
+    $('analysis-progress-wrap').classList.add('hidden');
+    $('model-compare-progress').classList.add('hidden');
+    $('model-compare-progress-bar').style.width = '0%';
+    $('model-compare-progress-percent').textContent = '0%';
+    $('model-compare-progress-label').textContent = 'Comparing selected models…';
+    $('open-comparison').disabled = false;
+    $('open-comparison').innerHTML = 'Compare selected AI reviewers <span>→</span>';
+    $('analyse-video-btn').disabled = false;
+    $('play-all-model-reviews').textContent = '▶ Play all model videos';
+    $('annotated-player').pause();
+    $('annotated-player').removeAttribute('src');
+    $('annotated-player').load();
+    $('model-review-player').pause();
+    $('model-review-player').removeAttribute('src');
+    $('model-review-player').removeAttribute('data-current-model');
+    $('model-review-player').load();
+    const dialog = $('score-evidence-dialog');
+    if (dialog?.open) dialog.close();
+  }
+
+  function switchDataset(datasetId) {
+    const next = DATASETS[datasetId];
+    if (!next) {
+      toast('The second recorded video data file could not be loaded.', true);
+      return;
+    }
     if (currentObjectUrl) {
       URL.revokeObjectURL(currentObjectUrl);
       currentObjectUrl = null;
     }
+    hasCustomUpload = false;
+    $('video-file').value = '';
+    resetRecordedResults();
+    CURRENT_DATA = next;
+    mainEvents = CURRENT_DATA.inspection.events || [];
+    models = CURRENT_DATA.models || [];
+    activeMainEventId = mainEvents[0]?.id || null;
+    expandedMainEventId = null;
+    activeModelId = models[0]?.model_id || null;
+    activeModelEventId = null;
+    expandedModelEventId = null;
+    activeScoreModelId = CURRENT_DATA.comparison.ranked_model_ids[0];
     loadSourceVideo();
-  });
+    renderCompareModelChoices();
+    renderEventHistory();
+    $('sample-select').value = datasetId;
+    $('active-main-caption').textContent = 'Select an event to inspect its evidence window.';
+    $('active-model-caption').textContent = 'Select a finding to play its surrounding evidence window.';
+    $('event-timeline').innerHTML = '';
+    $('model-tabs').innerHTML = '';
+    $('scorecard-rankings').innerHTML = '';
+    $('score-table').innerHTML = '';
+    $('agreement-chips').innerHTML = '';
+    toast(`Loaded ${CURRENT_DATA.source_video.title}.`);
+  }
+
+  $('sample-select').addEventListener('change', () => switchDataset($('sample-select').value));
 
   $('video-file').addEventListener('change', (event) => {
     const file = event.target.files?.[0];
@@ -207,17 +273,20 @@
   }
 
   function renderHeatmap() {
-    const trackNodes = DATA.inspection.heatmap.tracks.map((track) => {
-      const cells = Array.from({ length: 25 }, (_, index) => {
+    const duration = Math.max(1, Math.ceil(CURRENT_DATA.inspection.heatmap.duration_seconds));
+    const trackNodes = CURRENT_DATA.inspection.heatmap.tracks.map((track) => {
+      const cells = Array.from({ length: duration }, (_, index) => {
         const active = track.times.includes(index);
         return `<button type="button" class="heat-cell${active ? ' active' : ''}" data-heat-time="${index}" aria-label="Jump to ${formatTime(index)}" title="${track.label} · ${formatTime(index)}"> </button>`;
       }).join('');
       return `<div class="heatmap-track"><div class="heatmap-track-label">${escapeHtml(track.label)}</div><div class="heatmap-cells">${cells}</div></div>`;
     }).join('');
-    $('temporal-heatmap').innerHTML = `<div class="heatmap-ruler"><span></span><div class="ruler-labels"><span>0s</span><span>5s</span><span>10s</span><span>15s</span><span>20s</span><span>25s</span></div></div>${trackNodes}`;
+    const rulerValues = [0, Math.round(duration * 0.25), Math.round(duration * 0.5), Math.round(duration * 0.75), duration];
+    const ruler = [...new Set(rulerValues)].map((value) => `<span>${value}s</span>`).join('');
+    $('temporal-heatmap').innerHTML = `<div class="heatmap-ruler"><span></span><div class="ruler-labels">${ruler}</div></div>${trackNodes}`;
     const heatmap = $('spatial-heatmap');
     heatmap.querySelectorAll('.spatial-dot').forEach((node) => node.remove());
-    DATA.inspection.heatmap.spatial_points.forEach((point, index) => {
+    CURRENT_DATA.inspection.heatmap.spatial_points.forEach((point, index) => {
       const dot = document.createElement('span');
       dot.className = 'spatial-dot';
       dot.style.left = `${point.x * 100}%`;
@@ -225,7 +294,7 @@
       dot.title = `Matched YOLO subject ${index + 1} · approximate plotted location`;
       heatmap.appendChild(dot);
     });
-    $('spatial-heatmap-note').textContent = DATA.inspection.heatmap.spatial_note;
+    $('spatial-heatmap-note').textContent = CURRENT_DATA.inspection.heatmap.spatial_note;
     $('temporal-heatmap').querySelectorAll('[data-heat-time]').forEach((button) => {
       button.addEventListener('click', () => {
         const time = Number(button.dataset.heatTime);
@@ -244,18 +313,26 @@
     $('analysis-progress-wrap').classList.add('hidden');
     $('inspection-results').classList.remove('hidden');
     $('source-status').textContent = 'COMPLETED';
-    $('source-foot-message').textContent = 'Inspection replay completed. Six timestamped observations are ready for review.';
-    $('analysis-summary').textContent = DATA.inspection.analysis_summary;
+    $('source-foot-message').textContent = `Inspection completed. ${CURRENT_DATA.inspection.event_count} timestamped observations are ready for review.`;
+    $('analysis-summary').textContent = CURRENT_DATA.inspection.analysis_summary;
     const player = $('annotated-player');
-    player.src = DATA.inspection.output_url;
-    player.poster = DATA.inspection.poster;
+    player.src = CURRENT_DATA.inspection.output_url;
+    player.poster = CURRENT_DATA.inspection.poster;
     player.load();
     renderMainEvents();
     $('result-metrics').innerHTML = [
-      ['Clip reviewed', `${DATA.inspection.duration_seconds}s`],
-      ['AI issue findings', DATA.inspection.event_count],
-      ['Findings linked to YOLO', `${DATA.inspection.heatmap.matched_findings}/${DATA.inspection.heatmap.total_findings}`]
+      ['Clip reviewed', `${CURRENT_DATA.inspection.duration_seconds.toFixed(2)}s`],
+      ['AI issue findings', CURRENT_DATA.inspection.event_count],
+      ['Findings linked to YOLO', `${CURRENT_DATA.inspection.heatmap.matched_findings}/${CURRENT_DATA.inspection.heatmap.total_findings}`]
     ].map(([label, value]) => `<div class="result-metric"><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></div>`).join('');
+    $('event-history-count').textContent = `${mainEvents.length} EVENTS`;
+    $('heatmap-footnote').textContent = `${CURRENT_DATA.inspection.heatmap.matched_findings}/${CURRENT_DATA.inspection.heatmap.total_findings} AI findings linked to YOLO · ${CURRENT_DATA.inspection.heatmap.matched_subject_boxes} matched subject boxes. Plotted locations are approximate where noted; heat intensity is a visual summary, not a calibrated risk score.`;
+    const datasetSlug = CURRENT_DATA.metadata.dataset_id || 'factory-materials';
+    $('main-inspection-report-link').href = datasetSlug === 'factory-walkway' ? 'assets/data/walkway-inspection-report.json' : 'assets/data/inspection-report.json';
+    $('main-inspection-report-link').download = `factorylens-${datasetSlug}-inspection-report.json`;
+    $('main-annotated-download-link').href = CURRENT_DATA.inspection.output_url;
+    $('comparison-report-link').href = datasetSlug === 'factory-walkway' ? 'assets/data/walkway-model-comparison-report.json' : 'assets/data/model-comparison-report.json';
+    $('comparison-report-link').download = `factorylens-${datasetSlug}-model-comparison-report.json`;
     selectMainEvent(activeMainEventId, false, { expand: false });
     $('inspection-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
     toast('Recorded inspection results are ready.');
@@ -319,31 +396,91 @@
 
   function modelObservationMarkup(event) {
     const selected = event.id === activeModelEventId;
+    const expanded = event.id === expandedModelEventId;
     const correlation = event.corroboration || {};
-    return `<article class="model-finding-card${selected ? ' active' : ''}" data-model-observation="${escapeHtml(event.id)}">
-      <div class="model-finding-head"><button type="button" class="model-finding-time" data-model-seek="${escapeHtml(event.id)}">${escapeHtml(event.timestamp_label)} ▸</button><span class="model-finding-title">${escapeHtml(event.title)}</span><span class="model-severity">${escapeHtml(event.severity)}</span></div>
-      <p class="model-finding-description">${escapeHtml(event.visible_evidence)}</p>
-      ${subjectLinkMarkup(event.subject_link || { status: 'unmatched', label: 'NO YOLO BOX ASSIGNED', detail: 'No matching YOLO subject was recorded.' })}
-      <div class="model-corroboration${correlation.status === 'corroborated' ? '' : ' not'}">Cross-model agreement <strong>${escapeHtml(correlation.label || 'Not corroborated')}</strong>${correlation.also_reported_by ? `<span> · Also reported by ${escapeHtml(correlation.also_reported_by)}</span>` : ''}</div>
-      <button type="button" class="inspect-evidence-link" data-model-seek="${escapeHtml(event.id)}">Inspect video evidence →</button>
+    const endLabel = `${formatTime(event.context_start)}–${formatTime(event.context_end)}`;
+    const subjectLink = event.subject_link || {
+      status: 'unmatched',
+      label: 'NO YOLO BOX ASSIGNED',
+      detail: 'No matching YOLO subject was recorded.'
+    };
+    const corroborationClass = correlation.status === 'corroborated' ? '' : ' not';
+
+    return `<article class="model-event-accordion${expanded ? ' expanded' : ''}${selected ? ' selected' : ''}" data-model-event-accordion="${escapeHtml(event.id)}">
+      <button type="button" class="model-event-accordion-trigger${selected ? ' active' : ''}" data-model-event-toggle="${escapeHtml(event.id)}" aria-expanded="${expanded}" aria-controls="model-observation-${escapeHtml(event.id)}" title="Play and expand ${endLabel} event">
+        <span class="model-event-time">${escapeHtml(event.timestamp_label)}</span>
+        <span class="model-event-trigger-copy"><b>${escapeHtml(event.title)}</b><small>${escapeHtml(event.issue_type)} · ${endLabel} context</small></span>
+        <span class="model-event-severity severity-${escapeHtml(event.severity)}">${escapeHtml(event.severity)}</span>
+        <span class="model-event-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <div class="model-event-observation-panel${expanded ? '' : ' hidden'}" id="model-observation-${escapeHtml(event.id)}">
+        <div class="model-event-observation${selected ? ' active' : ''}" data-model-observation="${escapeHtml(event.id)}">
+          <div class="eyebrow model-observation-eyebrow">WHAT WAS OBSERVED · MODEL OBSERVATION</div>
+          <div class="model-observation-type"><span>${escapeHtml(event.issue_type)}</span><span class="severity-pill ${escapeHtml(event.severity)}">${escapeHtml(event.severity)} priority</span></div>
+          <h4>${escapeHtml(event.title)}</h4>
+          <div class="selected-playing">▶ SELECTED EVENT · PLAYING IN VIDEO</div>
+          <div class="model-observation-block"><b>What is visible</b><p>${escapeHtml(event.visible_evidence)}</p></div>
+          ${subjectLinkMarkup(subjectLink)}
+          <div class="model-corroboration${corroborationClass}">Cross-model agreement <strong>${escapeHtml(correlation.label || 'Not corroborated')}</strong>${correlation.also_reported_by ? `<span> · Also reported by ${escapeHtml(correlation.also_reported_by)}</span>` : ''}</div>
+          <div class="model-observation-footer"><span>AI-generated observation · Review candidate, not a confirmed fault</span><button type="button" class="inspect-evidence-link" data-model-seek="${escapeHtml(event.id)}">Inspect video evidence →</button></div>
+        </div>
+      </div>
     </article>`;
   }
 
-  function modelEventCardMarkup(event) {
-    const selected = event.id === activeModelEventId;
-    return `<button type="button" class="model-event-card${selected ? ' active' : ''}" data-model-card="${escapeHtml(event.id)}">
-      <span class="model-event-time">${escapeHtml(event.timestamp_label)}</span><b>${escapeHtml(event.title)}</b><small>${escapeHtml(event.issue_type)}</small>
-    </button>`;
+  function updateModelEventAccordionUI() {
+    $('model-event-cards').querySelectorAll('[data-model-event-accordion]').forEach((item) => {
+      const id = item.dataset.modelEventAccordion;
+      const expanded = id === expandedModelEventId;
+      const selected = id === activeModelEventId;
+      const trigger = item.querySelector('[data-model-event-toggle]');
+      const panel = item.querySelector('.model-event-observation-panel');
+      const observation = item.querySelector('[data-model-observation]');
+      item.classList.toggle('expanded', expanded);
+      item.classList.toggle('selected', selected);
+      trigger.classList.toggle('active', selected);
+      trigger.setAttribute('aria-expanded', String(expanded));
+      panel.classList.toggle('hidden', !expanded);
+      observation.classList.toggle('active', selected);
+    });
   }
 
-  function selectModelEvent(eventId, play = true) {
+  function renderModelEventTimeline(model) {
+    const timeline = $('model-event-cards');
+    const count = $('selected-model-event-count');
+    if (count) count.textContent = `${model.observations.length} EVENT${model.observations.length === 1 ? '' : 'S'}`;
+    if (!model.observations.length) {
+      timeline.innerHTML = '<div class="model-event-empty">No timestamped observations were recorded for this model.</div>';
+      return;
+    }
+    timeline.innerHTML = model.observations.map(modelObservationMarkup).join('');
+    timeline.querySelectorAll('[data-model-event-toggle]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const eventId = button.dataset.modelEventToggle;
+        expandedModelEventId = expandedModelEventId === eventId ? null : eventId;
+        selectModelEvent(eventId, true, { expand: false });
+        updateModelEventAccordionUI();
+      });
+    });
+    timeline.querySelectorAll('[data-model-seek]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const eventId = button.dataset.modelSeek;
+        expandedModelEventId = eventId;
+        selectModelEvent(eventId, true, { expand: false });
+        updateModelEventAccordionUI();
+      });
+    });
+    updateModelEventAccordionUI();
+  }
+
+  function selectModelEvent(eventId, play = true, options = {}) {
     const model = modelById(activeModelId);
     const event = model?.observations.find((item) => item.id === eventId);
     if (!event) return;
     activeModelEventId = event.id;
+    if (options.expand !== false) expandedModelEventId = event.id;
+    updateModelEventAccordionUI();
     $('active-model-caption').textContent = `${event.title} · ${formatTime(event.context_start)}–${formatTime(event.context_end)} CONTEXT`;
-    $('model-event-cards').querySelectorAll('[data-model-card]').forEach((node) => node.classList.toggle('active', node.dataset.modelCard === event.id));
-    $('active-model-observations').querySelectorAll('[data-model-observation]').forEach((node) => node.classList.toggle('active', node.dataset.modelObservation === event.id));
     const player = $('model-review-player');
     const seek = () => {
       player.currentTime = Math.min(Number(event.timestamp_seconds), Number.isFinite(player.duration) ? player.duration : Number(event.timestamp_seconds));
@@ -363,14 +500,12 @@
     }
     activeModelId = modelId;
     activeModelEventId = model.observations[0]?.id || null;
+    expandedModelEventId = null;
     $('model-tabs').querySelectorAll('[data-model-tab]').forEach((button) => button.classList.toggle('active', button.dataset.modelTab === modelId));
     $('active-model-name').textContent = model.name;
-    $('active-model-provider').textContent = `${model.provider_name} · Review complete`;
+    $('active-model-provider').textContent = model.status_label || `${model.provider_name} · Review complete`;
     $('active-model-summary').textContent = model.summary;
-    $('active-model-observations').innerHTML = model.observations.map(modelObservationMarkup).join('');
-    $('model-event-cards').innerHTML = model.observations.map(modelEventCardMarkup).join('');
-    $('active-model-observations').querySelectorAll('[data-model-seek]').forEach((button) => button.addEventListener('click', () => selectModelEvent(button.dataset.modelSeek, true)));
-    $('model-event-cards').querySelectorAll('[data-model-card]').forEach((button) => button.addEventListener('click', () => selectModelEvent(button.dataset.modelCard, true)));
+    renderModelEventTimeline(model);
     const player = $('model-review-player');
     $('model-playback-message').classList.add('hidden');
     const needsSourceChange = player.dataset.currentModel !== modelId;
@@ -420,8 +555,8 @@
   }
 
   function renderScoreTable() {
-    const ids = DATA.comparison.ranked_model_ids;
-    const headers = ids.map((id) => `<th class="${id === activeScoreModelId ? 'active-score-col' : ''}"><button type="button" class="score-model-heading" data-score-heading="${escapeHtml(id)}">${escapeHtml(modelById(id).name)}</button></th>`).join('');
+    const ids = CURRENT_DATA.comparison.ranked_model_ids;
+    const headers = ids.map((id) => `<th class="${id === activeScoreModelId ? 'active-score-col' : ''}"><button type="button" class="score-model-heading" data-score-heading="${escapeHtml(id)}" aria-haspopup="dialog" aria-controls="score-evidence-dialog">${escapeHtml(modelById(id).name)}</button></th>`).join('');
     const rows = [
       ['overall', 'Overall comparative score'],
       ['findings', 'Findings reported'],
@@ -432,29 +567,67 @@
       ['tokens', 'Token usage'],
       ['cost', 'Provider-reported cost']
     ];
-    $('score-table').innerHTML = `<thead><tr><th>Measured criterion</th>${headers}</tr></thead><tbody>${rows.map(([key, label]) => `<tr><td><button type="button" class="score-criterion-label" data-score-criterion-label="${key}">${escapeHtml(label)}</button></td>${ids.map((id) => `<td class="${id === activeScoreModelId ? 'active-score-col' : ''}"><button type="button" class="score-evidence-trigger" data-score-proof-model="${escapeHtml(id)}" data-score-proof-criterion="${key}" aria-label="Show ${escapeHtml(label)} evidence for ${escapeHtml(modelById(id).name)}">${escapeHtml(scoreValueCell(id, key))}</button></td>`).join('')}</tr>`).join('')}</tbody>`;
+    $('score-table').innerHTML = `<thead><tr><th>Comparison criterion</th>${headers}</tr></thead><tbody>${rows.map(([key, label]) => `<tr><td><button type="button" class="score-criterion-label" data-score-criterion-label="${key}" aria-haspopup="dialog" aria-controls="score-evidence-dialog">${escapeHtml(label)}</button></td>${ids.map((id) => `<td class="${id === activeScoreModelId ? 'active-score-col' : ''}"><button type="button" class="score-evidence-trigger" data-score-proof-model="${escapeHtml(id)}" data-score-proof-criterion="${key}" aria-haspopup="dialog" aria-controls="score-evidence-dialog" aria-label="Show ${escapeHtml(label)} evidence for ${escapeHtml(modelById(id).name)}">${escapeHtml(scoreValueCell(id, key))}</button></td>`).join('')}</tr>`).join('')}</tbody>`;
     $('score-table').querySelectorAll('[data-score-heading]').forEach((button) => button.addEventListener('click', () => renderScoreEvidence(button.dataset.scoreHeading, 'overall')));
     $('score-table').querySelectorAll('[data-score-proof-model]').forEach((button) => button.addEventListener('click', () => renderScoreEvidence(button.dataset.scoreProofModel, button.dataset.scoreProofCriterion)));
     $('score-table').querySelectorAll('[data-score-criterion-label]').forEach((button) => button.addEventListener('click', () => renderScoreEvidence(activeScoreModelId, button.dataset.scoreCriterionLabel)));
   }
 
   function proofFindingRow(modelId, event, status, detail) {
-    return `<div class="score-proof-finding">
-      <div class="score-proof-finding-main"><span class="score-proof-time">${escapeHtml(event.timestamp_label)}</span><div><b>${escapeHtml(event.title)}</b><small>${escapeHtml(event.issue_type)} · ${escapeHtml(event.severity)} priority</small><p>${escapeHtml(event.visible_evidence)}</p></div></div>
-      <div class="score-proof-finding-status">${escapeHtml(status)}<small>${escapeHtml(detail)}</small></div>
-      <button type="button" class="score-proof-open" data-proof-model="${escapeHtml(modelId)}" data-proof-event="${escapeHtml(event.id)}">Review finding in annotated video →</button>
+    const subject = event.subject_link || {};
+    const corroboration = event.corroboration || {};
+    const partnerModel = corroboration.also_reported_by ? models.find((item) => item.name === corroboration.also_reported_by) : null;
+    const partnerMatches = partnerModel ? (partnerModel.observations || []).filter((candidate) => candidate.issue_type === event.issue_type && Math.abs(Number(candidate.timestamp_seconds) - Number(event.timestamp_seconds)) <= 5) : [];
+    const partnerEvidence = partnerMatches.length ? `Saved peer record within the ±5-second comparison window: ${partnerMatches.map((candidate) => `${candidate.title} [${candidate.id}] at ${candidate.timestamp_label} (Δ${Math.abs(Number(candidate.timestamp_seconds) - Number(event.timestamp_seconds)).toFixed(1)}s)`).join('; ')}.` : (corroboration.also_reported_by ? 'The report names a corroborating model, but no same-category peer record falls within the ±5-second window in this local copy.' : 'No corroborating model record is named.');
+    const subjectValue = subject.status === 'linked'
+      ? `${subject.class || 'Object'} linked${Number.isFinite(Number(subject.confidence)) ? ` · ${Number(subject.confidence).toFixed(1)}% detector confidence` : ''}`
+      : subject.status === 'not_applicable' ? 'Not applicable to object detector' : 'No matching subject box recorded';
+    const corroborationValue = corroboration.status === 'corroborated'
+      ? `Also reported by ${corroboration.also_reported_by || 'another selected model'}`
+      : 'No corroborating model recorded';
+    return `<article class="score-proof-finding">
+      <div class="score-proof-finding-top">
+        <div class="score-proof-record-meta"><span class="score-proof-time">${escapeHtml(event.timestamp_label)}</span><code>${escapeHtml(event.id)}</code><span class="score-proof-context-window">Window ${escapeHtml(formatTime(event.context_start))}–${escapeHtml(formatTime(event.context_end))}</span></div>
+        <span class="score-proof-severity severity-${escapeHtml(String(event.severity || 'unknown').toLowerCase())}">${escapeHtml(String(event.severity || 'UNSPECIFIED').toUpperCase())} PRIORITY</span>
+      </div>
+      <h4>${escapeHtml(event.title)}</h4>
+      <div class="score-proof-record-grid">
+        <div><small>Issue category</small><b>${escapeHtml(event.issue_type || 'Not supplied')}</b></div>
+        <div><small>AI ↔ YOLO association</small><b>${escapeHtml(subjectValue)}</b><p>${escapeHtml(subject.detail || subject.label || 'No detector association detail was recorded.')}</p></div>
+        <div><small>Cross-model check</small><b>${escapeHtml(corroborationValue)}</b><p>${escapeHtml(partnerEvidence)}</p></div>
+      </div>
+      <div class="score-proof-observation"><span>OBSERVATION RECORDED AT ${escapeHtml(event.timestamp_label)}</span><p>${escapeHtml(event.visible_evidence || 'No visible-evidence text was supplied in the saved record.')}</p></div>
+      <div class="score-proof-decision"><b>How this record affects the selected criterion</b><span class="score-proof-finding-status">${escapeHtml(status)}</span><p>${escapeHtml(detail)}</p></div>
+      <button type="button" class="score-proof-open" data-proof-model="${escapeHtml(modelId)}" data-proof-event="${escapeHtml(event.id)}">Open this timestamp in the annotated model video <span aria-hidden="true">→</span></button>
+    </article>`;
+  }
+
+  function scoreEvidenceComparisonTable(peerScores, criterionKey, valueFormatter, baselineText) {
+    return `<div class="score-proof-comparison-wrap">
+      <div class="score-proof-section-heading"><b>Run comparison</b><span>Saved comparison values</span></div>
+      <table class="score-proof-comparison-table"><thead><tr><th>Model</th><th>Value</th><th>Normalized</th><th>Weighted points</th></tr></thead><tbody>
+        ${peerScores.map(({model,score}) => `<tr><td>${escapeHtml(model.name)}</td><td>${escapeHtml(valueFormatter(score))}</td><td>${Number(score[criterionKey].percent).toFixed(1)}%</td><td>${Number(score[criterionKey].points).toFixed(1)}</td></tr>`).join('')}
+      </tbody></table>
+      <p class="score-proof-baseline">${escapeHtml(baselineText)}</p>
     </div>`;
   }
 
-  function renderScoreEvidence(modelId, criterionKey) {
+  function renderScoreEvidence(modelId, criterionKey, options = {}) {
     const score = scoreById(modelId);
     const model = modelById(modelId);
     if (!score || !model) return;
     activeScoreModelId = modelId;
     $('scorecard-rankings').querySelectorAll('[data-score-model]').forEach((button) => button.classList.toggle('active', button.dataset.scoreModel === modelId));
-    renderScoreTable();
+    $('score-table').querySelectorAll('[data-score-heading]').forEach((button) => {
+      const cell = button.closest('th');
+      if (cell) cell.classList.toggle('active-score-col', button.dataset.scoreHeading === modelId);
+    });
+    $('score-table').querySelectorAll('[data-score-proof-model]').forEach((button) => {
+      const cell = button.closest('td');
+      if (cell) cell.classList.toggle('active-score-col', button.dataset.scoreProofModel === modelId);
+    });
 
-    const weights = DATA.comparison.weights;
+    const weights = CURRENT_DATA.comparison.weights;
     const criterion = weights.find((item) => item.key === criterionKey);
     const labelMap = {
       overall: 'Overall comparative score', findings: 'Findings reported',
@@ -464,35 +637,56 @@
     };
     const label = labelMap[criterionKey] || criterion?.label || 'Score evidence';
     const observations = model.observations || [];
-    const peerScores = DATA.comparison.ranked_model_ids.map((id) => ({ model: modelById(id), score: scoreById(id) }));
+    const evidenceReportFile = CURRENT_DATA.metadata.dataset_id === 'factory-walkway' ? 'walkway-model-comparison-report.json' : 'model-comparison-report.json';
+    const evidenceSourceLabel = 'saved comparison report';
+    const peerScores = CURRENT_DATA.comparison.ranked_model_ids.map((id) => ({ model: modelById(id), score: scoreById(id) }));
+    const dialog = $('score-evidence-dialog');
     let summary = '';
     let evidence = '';
+    let method = '';
+    let valueText = criterionKey === 'overall' ? `${score.score.toFixed(1)} / 100` : scoreValueCell(modelId, criterionKey);
+    let metaText = criterion ? `${criterion.weight}% score weight · ${Number(score[criterionKey].percent).toFixed(1)}% normalized · ${Number(score[criterionKey].points).toFixed(1)} weighted points` : 'Context metric · not included in the weighted total';
 
     if (criterionKey === 'overall') {
       const componentRows = weights.map((item) => {
         const metric = score[item.key];
-        return `<div class="score-evidence-component"><div><b>${escapeHtml(item.label)}</b><span>${Number(metric.points).toFixed(1)} / ${item.weight} pts</span></div><div class="score-bar"><i style="width:${Math.max(0, Math.min(100, Number(metric.percent)))}%"></i></div><small>${Number(metric.percent).toFixed(1)}% measured value × ${item.weight}% weight · ${escapeHtml(item.description)}</small></div>`;
+        return `<div class="score-evidence-component"><div><b>${escapeHtml(item.label)}</b><span>${Number(metric.points).toFixed(1)} / ${item.weight} pts</span></div><div class="score-bar"><i style="width:${Math.max(0, Math.min(100, Number(metric.percent)))}%"></i></div><small>${Number(metric.percent).toFixed(1)}% normalized score × ${item.weight}% weight = ${Number(metric.points).toFixed(1)} contribution</small></div>`;
       }).join('');
-      summary = `The recorded total is ${score.score.toFixed(1)} / 100, calculated by adding the weighted points from each enabled criterion. ${score.rank} is a relative rank within this recorded run, not a ground-truth accuracy label.`;
-      evidence = `<div class="score-evidence-components">${componentRows}</div><div class="score-proof-callout">Calculation: ${weights.map((item) => `${Number(score[item.key].points).toFixed(1)}`).join(' + ')} = <b>${score.score.toFixed(1)} points</b>. The individual criterion cells below can be opened to inspect their underlying records.</div>`;
+      const sum = weights.reduce((total, item) => total + Number(score[item.key].points), 0);
+      summary = `The ${evidenceSourceLabel} assigns ${score.score.toFixed(1)} / 100 to ${model.name}. The total is the sum of the six weighted criterion contributions below (${sum.toFixed(1)} when recalculated from the displayed values). ${score.rank} is a relative position among these three comparison entries; it is not a verified safety-accuracy grade.`;
+      evidence = `<div class="score-evidence-components">${componentRows}</div>
+        <div class="score-proof-callout"><b>Reproducible total</b><br>${weights.map((item) => `${Number(score[item.key].points).toFixed(1)}`).join(' + ')} = <strong>${sum.toFixed(1)} points</strong>. The ${evidenceSourceLabel} stores ${score.score.toFixed(1)}. Any 0.1-point difference can arise from the report's rounded component values; the bundled report is the source of record.</div>
+        <div class="score-proof-comparison-wrap"><div class="score-proof-section-heading"><b>Relative ranking in this comparison</b><span>Not ground-truth accuracy</span></div><div class="score-proof-rank-list">${peerScores.map(({model:peer,score:peerScore},index)=>`<div class="score-proof-rank-row"><span>${index+1}</span><b>${escapeHtml(peer.name)}</b><strong>${peerScore.score.toFixed(1)} / 100</strong><small>${escapeHtml(peerScore.rank)}</small></div>`).join('')}</div></div>
+        <div class="score-proof-callout score-proof-caveat"><b>Interpretation</b><br>Findings reported is shown as a contextual count in the table; it is not one of the six weighted criteria. More findings do not automatically mean better detection. Cross-model agreement measures consistency, not truth.</div>`;
+      method = 'The comparison uses YOLO alignment (35%), cross-model corroboration (25%), structured output completeness (12%), response speed (12%), token efficiency (8%) and cost efficiency (8%). The displayed points follow the saved comparison values; the score is comparative and depends on these chosen weights.';
+      metaText = `${score.rank} relative run rank · six weighted components · 100-point scale`;
     } else if (criterionKey === 'findings') {
-      summary = `The report contains ${score.findings_reported} structured observation record(s) for ${model.name}. The count is the number of entries in this model's saved observations array.`;
-      evidence = `<div class="score-proof-list">${observations.map((event) => proofFindingRow(modelId, event, 'REPORTED FINDING', `${event.timestamp_label} · record ${event.id}`)).join('')}</div>`;
+      summary = `${model.name} has ${score.findings_reported} observation record(s), and the observations array contains ${observations.length} record(s). This is a volume/context measure only; it does not add points to the weighted score and should not be interpreted as a detection-quality grade.`;
+      evidence = `<div class="score-proof-callout"><b>Counting rule</b><br>One row below equals one observation object in the bundled model-comparison JSON. Multiple findings may share a timestamp because they describe separate observations from the same video moment.</div><div class="score-proof-list">${observations.map((event) => proofFindingRow(modelId, event, 'COUNTED · 1 RECORD', `This observation object contributes one to the displayed finding count. Record ID: ${event.id}.`)).join('')}</div>`;
+      method = 'The count is read directly from the saved observations array. It is not weighted into the overall comparison score because raw finding quantity alone does not indicate correctness or completeness.';
+      metaText = 'Context metric · excluded from weighted total';
     } else if (criterionKey === 'yolo') {
       const eligible = observations.filter((event) => event.subject_link?.status !== 'not_applicable');
       const excluded = observations.filter((event) => event.subject_link?.status === 'not_applicable');
-      summary = `${score.yolo.numerator} of ${score.yolo.denominator} eligible subject-related findings were linked to a matching YOLO subject (${score.yolo.percent.toFixed(1)}%). Findings marked not applicable are excluded because their condition is not an object class recognised by the current detector.`;
-      evidence = `<div class="score-proof-list">${eligible.map((event) => {
-        const linked = event.subject_link?.status === 'linked';
-        return proofFindingRow(modelId, event, linked ? 'YOLO LINKED' : 'NO MATCH', event.subject_link?.detail || event.subject_link?.label || 'No matching subject was recorded.');
-      }).join('')}${excluded.map((event) => proofFindingRow(modelId, event, 'EXCLUDED · NOT APPLICABLE', event.subject_link?.detail || 'Not an eligible object-class subject for YOLO matching.')).join('')}</div>`;
+      const linked = eligible.filter((event) => event.subject_link?.status === 'linked');
+      const unmatched = eligible.filter((event) => event.subject_link?.status !== 'linked');
+      summary = `${score.yolo.numerator} of ${score.yolo.denominator} eligible findings have a saved YOLO subject association (${score.yolo.percent.toFixed(1)}%). ${linked.length} linked record(s) and ${unmatched.length} eligible record(s) without a matching box are listed below. ${excluded.length} condition record(s) marked not applicable are shown separately and excluded from the denominator.`;
+      evidence = `<div class="score-proof-callout"><b>Decision rule</b><br>Count a finding as aligned only when the saved record has subject_link.status = <code>linked</code>. A finding tagged <code>unmatched</code> is not credited with a box. A non-object condition tagged <code>not_applicable</code> is excluded from the eligible denominator. The saved report gives ${score.yolo.numerator} ÷ ${score.yolo.denominator} = ${score.yolo.percent.toFixed(1)}%.</div>
+        <div class="score-proof-metric-strip"><div><small>Linked</small><b>${linked.length}</b></div><div><small>Eligible, not matched</small><b>${unmatched.length}</b></div><div><small>Not applicable</small><b>${excluded.length}</b></div></div>
+        <div class="score-proof-section-heading"><b>Eligible subject findings</b><span>${eligible.length} records</span></div><div class="score-proof-list">${eligible.map((event) => {
+          const isLinked = event.subject_link?.status === 'linked';
+          const matchDetail = isLinked ? `${event.subject_link.class || 'Subject'} match recorded${Number.isFinite(Number(event.subject_link.confidence)) ? ` at ${Number(event.subject_link.confidence).toFixed(1)}% detector confidence` : ''}.` : (event.subject_link?.detail || 'No matching YOLO subject was saved for this event timestamp.');
+          return proofFindingRow(modelId, event, isLinked ? 'CREDITED · LINKED' : 'NOT CREDITED · NO MATCH', matchDetail);
+        }).join('')}</div>${excluded.length ? `<div class="score-proof-section-heading"><b>Excluded from denominator</b><span>${excluded.length} record</span></div><div class="score-proof-list">${excluded.map((event) => proofFindingRow(modelId, event, 'EXCLUDED · NOT APPLICABLE', event.subject_link?.detail || 'This condition is not represented as an eligible YOLO object class in the saved report.')).join('')}</div>` : ''}`;
+      method = 'This criterion evaluates subject association in the saved comparison output. Detector confidence is reported only where the record contains it; a confidence value does not prove that the downstream hazard interpretation is correct. The static demo does not expose raw frame-level YOLO tensors or detector logs.';
     } else if (criterionKey === 'corroboration') {
-      summary = `${score.corroboration.numerator} of ${score.corroboration.denominator} reported findings were also reported by another selected model within the configured time tolerance (${score.corroboration.percent.toFixed(1)}%). Agreement indicates consistency, not truth.`;
-      evidence = `<div class="score-proof-list">${observations.map((event) => {
-        const corroborated = event.corroboration?.status === 'corroborated';
-        const partner = event.corroboration?.also_reported_by ? `Also reported by ${event.corroboration.also_reported_by}.` : (event.corroboration?.label || 'No matching report recorded.');
-        return proofFindingRow(modelId, event, corroborated ? 'CORROBORATED' : 'NOT CORROBORATED', partner);
-      }).join('')}</div>`;
+      const corroborated = observations.filter((event) => event.corroboration?.status === 'corroborated');
+      const notCorroborated = observations.filter((event) => event.corroboration?.status !== 'corroborated');
+      summary = `${score.corroboration.numerator} of ${score.corroboration.denominator} findings are marked corroborated in the saved report (${score.corroboration.percent.toFixed(1)}%). The comparison records ${corroborated.length} corroborated observation(s) and ${notCorroborated.length} without a corroborating model for this selected model.`;
+      evidence = `<div class="score-proof-callout"><b>Decision rule</b><br>A finding is credited when its saved corroboration.status is <code>corroborated</code>. The record must also name the other model where that detail is available. The report's score is ${score.corroboration.numerator} ÷ ${score.corroboration.denominator} = ${score.corroboration.percent.toFixed(1)}%. This is evidence of agreement, not independent validation.</div>
+        <div class="score-proof-section-heading"><b>Corroborated records</b><span>${corroborated.length} records</span></div><div class="score-proof-list">${corroborated.map((event) => proofFindingRow(modelId, event, 'CREDITED · CORROBORATED', `The saved record names ${event.corroboration?.also_reported_by || 'another selected model'} as also reporting this finding at approximately ${event.timestamp_label}.`)).join('') || '<p class="score-proof-empty">No findings in this model were marked as corroborated.</p>'}</div>
+        <div class="score-proof-section-heading"><b>Not corroborated</b><span>${notCorroborated.length} records</span></div><div class="score-proof-list">${notCorroborated.map((event) => proofFindingRow(modelId, event, 'NOT CREDITED · NO MATCH', 'No supporting cross-model match is recorded for this observation in the saved report.')).join('') || '<p class="score-proof-empty">All saved findings have a corroboration record.</p>'}</div>`;
+      method = 'The result is based on the corroboration flags and partner model names stored with each observation. The static report does not include the underlying prompt/response transcript or the full matching algorithm trace, so this should be treated as a recorded comparison signal rather than proof of truth.';
     } else if (criterionKey === 'structure') {
       const checks = observations.map((event) => ({
         event,
@@ -500,53 +694,70 @@
         category: Boolean(event.issue_type && event.issue_type.trim()),
         timestamp: Number.isFinite(Number(event.timestamp_seconds)) && Boolean(event.timestamp_label)
       }));
-      summary = `${score.structure.numerator} of ${score.structure.denominator} findings passed the saved structured-output checks for a non-empty title, issue category and timestamp (${score.structure.percent.toFixed(1)}%).`;
-      evidence = `<div class="score-proof-list">${checks.map(({event,title,category,timestamp}) => proofFindingRow(modelId, event, title && category && timestamp ? 'COMPLETE' : 'INCOMPLETE', `Title ${title ? '✓' : '✕'} · Issue category ${category ? '✓' : '✕'} · Timestamp ${timestamp ? '✓' : '✕'}`)).join('')}</div>`;
+      const passed = checks.filter((item) => item.title && item.category && item.timestamp);
+      summary = `${score.structure.numerator} of ${score.structure.denominator} findings passed the saved structural checks (${score.structure.percent.toFixed(1)}%). The checks require a non-empty title, issue category and timestamp. This measures whether the observation is reviewable in the interface, not whether the interpretation is correct.`;
+      evidence = `<div class="score-proof-callout"><b>Validation rule</b><br>For each observation, test: (1) title contains text; (2) issue_type contains text; (3) timestamp_seconds is numeric and timestamp_label is present. A record passes only when all three checks pass. Saved result: ${passed.length} ÷ ${checks.length} = ${score.structure.percent.toFixed(1)}%.</div>
+        <div class="score-proof-list">${checks.map(({event,title,category,timestamp}) => proofFindingRow(modelId, event, title && category && timestamp ? 'PASSED · 3 OF 3 CHECKS' : 'FAILED · INCOMPLETE', `Title: ${title ? 'PASS' : 'FAIL'} · Issue category: ${category ? 'PASS' : 'FAIL'} · Timestamp: ${timestamp ? 'PASS' : 'FAIL'}. This record ${title && category && timestamp ? 'meets' : 'does not meet'} the saved structural completeness rule.`)).join('')}</div>`;
+      method = 'The checks are recomputed from the actual observation objects in the bundled JSON at page load. A passing record can still contain an incorrect or incomplete visual interpretation; this score only checks the presence of the required fields.';
     } else if (criterionKey === 'speed') {
       const fastest = Math.min(...peerScores.map((item) => Number(item.score.speed.latency_seconds)));
-      summary = `The recorded response latency was ${score.speed.latency_seconds.toFixed(2)} seconds. The fastest completed model in this comparison (${fastest.toFixed(2)} seconds) receives the full response-speed score; other models are scaled relative to that run.`;
-      evidence = `<div class="score-proof-metrics">${peerScores.map((item) => `<div><b>${escapeHtml(item.model.name)}</b><span>${item.score.speed.latency_seconds.toFixed(2)} s</span><small>${item.score.speed.percent.toFixed(1)}% normalized · ${item.score.speed.points.toFixed(1)} weighted points</small></div>`).join('')}</div><div class="score-proof-callout">Selected model: <b>${score.speed.latency_seconds.toFixed(2)} seconds</b> · ${score.speed.percent.toFixed(1)}% normalized · ${score.speed.points.toFixed(1)} weighted points (${criterion?.weight ?? 12}% weight).</div>`;
+      const fastestModel = peerScores.find((item) => Number(item.score.speed.latency_seconds) === fastest)?.model.name || 'fastest model';
+      summary = `The response latency listed for ${model.name} is ${score.speed.latency_seconds.toFixed(2)} seconds. ${fastestModel} is the fastest comparison entry at ${fastest.toFixed(2)} seconds. The saved normalization is fastest latency ÷ this model's latency × 100, giving ${score.speed.percent.toFixed(1)}% and ${score.speed.points.toFixed(1)} weighted points.`;
+      evidence = `${scoreEvidenceComparisonTable(peerScores, 'speed', (item) => `${item.speed.latency_seconds.toFixed(2)} s`, `Normalization baseline: ${fastest.toFixed(2)} s (fastest completed model). For this model: ${fastest.toFixed(2)} ÷ ${score.speed.latency_seconds.toFixed(2)} × 100 = ${score.speed.percent.toFixed(1)}%; then × ${criterion.weight}% weight = ${score.speed.points.toFixed(1)} points.`)}
+        <div class="score-proof-callout">Latency is shown as a comparison value from this saved replay. No repeated-run distribution is included, so the ranking should not be treated as a benchmark confidence interval.</div>`;
+      method = 'Lower latency receives a higher normalized score. The score is sensitive to the conditions of this one recorded run, including provider queueing, network conditions and prompt size.';
     } else if (criterionKey === 'tokens') {
       const minimum = Math.min(...peerScores.map((item) => Number(item.score.tokens.total)));
-      summary = `The recorded usage was ${score.tokens.total.toLocaleString('en-US')} tokens (${score.tokens.input.toLocaleString('en-US')} input + ${score.tokens.output.toLocaleString('en-US')} output). The lowest total token count in this run (${minimum.toLocaleString('en-US')}) receives the full token-efficiency score.`;
-      evidence = `<div class="score-proof-metrics">${peerScores.map((item) => `<div><b>${escapeHtml(item.model.name)}</b><span>${item.score.tokens.total.toLocaleString('en-US')} tokens</span><small>${item.score.tokens.input.toLocaleString('en-US')} input + ${item.score.tokens.output.toLocaleString('en-US')} output · ${item.score.tokens.percent.toFixed(1)}% normalized</small></div>`).join('')}</div><div class="score-proof-callout">Selected model: <b>${score.tokens.total.toLocaleString('en-US')} tokens</b> · ${score.tokens.percent.toFixed(1)}% normalized · ${score.tokens.points.toFixed(1)} weighted points (${criterion?.weight ?? 8}% weight).</div>`;
+      const lowestModel = peerScores.find((item) => Number(item.score.tokens.total) === minimum)?.model.name || 'lowest-token model';
+      summary = `${model.name} used ${score.tokens.total.toLocaleString('en-US')} tokens: ${score.tokens.input.toLocaleString('en-US')} input + ${score.tokens.output.toLocaleString('en-US')} output. ${lowestModel} is the minimum-token baseline at ${minimum.toLocaleString('en-US')}. Normalization is minimum total ÷ this model's total × 100, producing ${score.tokens.percent.toFixed(1)}% and ${score.tokens.points.toFixed(1)} weighted points.`;
+      evidence = `${scoreEvidenceComparisonTable(peerScores, 'tokens', (item) => `${item.tokens.total.toLocaleString('en-US')} (${item.tokens.input.toLocaleString('en-US')} in + ${item.tokens.output.toLocaleString('en-US')} out)`, `Normalization baseline: ${minimum.toLocaleString('en-US')} tokens. For this model: ${minimum.toLocaleString('en-US')} ÷ ${score.tokens.total.toLocaleString('en-US')} × 100 = ${score.tokens.percent.toFixed(1)}%; then × ${criterion.weight}% weight = ${score.tokens.points.toFixed(1)} points.`)}
+        <div class="score-proof-callout">Token counts are reproduced from the saved comparison report. They are not a measure of answer quality; prompt length, image/frame payload handling and provider token accounting can affect comparability.</div>`;
+      method = 'Lower total token usage receives a higher normalized score. Input and output counts are shown separately so the total can be checked by addition.';
     } else if (criterionKey === 'cost') {
-      const allCosts = peerScores.map((item) => item.score.cost.usd);
-      const equal = allCosts.every((value) => Number(value) === Number(allCosts[0]));
-      summary = `The supplied comparison report records ${`$${score.cost.usd.toFixed(6)} USD`} for this model. ${equal ? 'All three models have the same recorded cost value, so this criterion does not distinguish their relative ranking in this saved run.' : 'The scores are normalized against the costs recorded for the other selected models.'}`;
-      evidence = `<div class="score-proof-metrics">${peerScores.map((item) => `<div><b>${escapeHtml(item.model.name)}</b><span>$${item.score.cost.usd.toFixed(6)} USD</span><small>${item.score.cost.percent.toFixed(1)}% normalized · ${item.score.cost.points.toFixed(1)} weighted points</small></div>`).join('')}</div><div class="score-proof-callout">Cost values are reproduced from the bundled comparison JSON. The static repository does not include raw provider billing receipts or API usage logs to independently verify these amounts.</div>`;
+      const allCosts = peerScores.map((item) => Number(item.score.cost.usd));
+      const equal = allCosts.every((value) => value === allCosts[0]);
+      const allZero = allCosts.every((value) => value === 0);
+      summary = `The comparison report shows $${score.cost.usd.toFixed(6)} USD for ${model.name}. ${equal ? 'All selected models have the same numeric value, so this criterion does not separate their ranking in this run.' : 'The values are normalized against the other selected models.'} ${allZero ? 'All three values are zero in the saved comparison. Billing receipts are not included in this demo.' : ''}`;
+      evidence = `<div class="score-proof-metrics">${peerScores.map((item) => `<div><b>${escapeHtml(item.model.name)}</b><span>$${item.score.cost.usd.toFixed(6)} USD</span><small>${item.score.cost.percent.toFixed(1)}% normalized · ${item.score.cost.points.toFixed(1)} weighted points</small></div>`).join('')}</div>
+        <div class="score-proof-callout"><b>Contribution to the total</b><br>${score.cost.percent.toFixed(1)}% normalized × ${criterion.weight}% weight = ${score.cost.points.toFixed(1)} points. ${equal ? 'Because the values are equal, every model receives the same contribution.' : 'The values differ across models and affect the relative total.'}</div>
+        <div class="score-proof-callout score-proof-caveat"><b>Verification limit</b><br>Provider billing receipts, invoice exports and raw usage-cost response fields are not included. The displayed values cannot be independently audited as billed cost from this repository.</div>`;
+      method = 'Cost efficiency is compared using the numeric values in the saved comparison report. The displayed amount should be treated as demo report data, not an independently audited invoice.';
     }
 
-    $('score-detail-panel').innerHTML = `<div class="score-detail-head"><div><b>${escapeHtml(label)} · ${escapeHtml(model.name)}</b><small>${escapeHtml(score.rank)} relative rank</small></div><span>${criterionKey === 'overall' ? `${score.score.toFixed(1)} / 100` : escapeHtml(scoreValueCell(modelId, criterionKey))}</span></div>
-      <p class="score-evidence-summary">${escapeHtml(summary)}</p>${evidence}
-      <div class="score-evidence-source-note">Evidence basis: bundled model observation records and the saved comparison report. Timestamp links open the corresponding recorded annotated model video. Raw provider request/response logs are not included in this GitHub Pages demo.</div>`;
+    $('score-evidence-dialog-title').textContent = `${label} · ${model.name}`;
+    $('score-evidence-dialog-subtitle').textContent = `${score.rank} relative rank · Value: ${valueText} · ${metaText}`;
+    $('score-evidence-dialog-content').innerHTML = `<div class="score-evidence-summary">${escapeHtml(summary)}</div>
+      <div class="score-proof-method"><span class="eyebrow">SCORING METHOD & INTERPRETATION</span><p>${escapeHtml(method)}</p></div>
+      ${evidence}
+      <div class="score-evidence-source-note"><b>Evidence source:</b> values and observation records are included in <code>assets/data/${evidenceReportFile}</code> in this repository. The modal presents the scoring arithmetic and supporting records bundled with this static replay. Raw provider request logs, invoice receipts, original frame-level detector outputs and repeated benchmark runs are not included.</div>`;
+    if (options.open !== false && dialog && !dialog.open) dialog.showModal();
   }
 
   function renderScorecard() {
-    const ids = DATA.comparison.ranked_model_ids;
+    const ids = CURRENT_DATA.comparison.ranked_model_ids;
     $('scorecard-rankings').innerHTML = ids.map((id) => {
       const model = modelById(id), score = scoreById(id);
-      const tone = score.rank === 'BEST' ? 'best' : score.rank === 'BETTER' ? 'better' : 'good';
-      return `<button type="button" class="rank-card ${tone}${id === activeScoreModelId ? ' active' : ''}" data-score-model="${escapeHtml(id)}">
+      const tone = score.rank.includes('BEST') ? 'best' : score.rank.includes('BETTER') ? 'better' : 'good';
+      return `<button type="button" class="rank-card ${tone}${id === activeScoreModelId ? ' active' : ''}" data-score-model="${escapeHtml(id)}" aria-haspopup="dialog" aria-controls="score-evidence-dialog">
         <span class="rank-text"><span class="rank-label">${escapeHtml(score.rank)}</span><b>${escapeHtml(model.name)}</b><small>YOLO linked ${score.yolo.numerator} of ${score.yolo.denominator} eligible AI subjects (${score.yolo.percent.toFixed(1)}%).</small></span>
         <span class="rank-score">${score.score.toFixed(1)}<small> /100</small></span>
       </button>`;
     }).join('');
     $('scorecard-rankings').querySelectorAll('[data-score-model]').forEach((button) => button.addEventListener('click', () => renderScoreEvidence(button.dataset.scoreModel, 'overall')));
-    $('score-method-note').textContent = `How ranking is calculated: YOLO subject alignment 35%, cross-model corroboration 25%, structured output completeness 12%, response speed 12%, token efficiency 8%, and provider-reported cost efficiency 8% only when actual cost is available for every completed model. If a criterion is unavailable for any completed model, it is excluded for all and the remaining weights are rebalanced. Cost values reproduce the bundled run report. The score is a relative run comparison, not ground-truth accuracy.`;
+    $('score-method-note').textContent = `${CURRENT_DATA.comparison.method_note} Scoring weights: YOLO subject alignment 35%, cross-model corroboration 25%, structured output completeness 12%, response speed 12%, token efficiency 8%, and cost efficiency 8%. Cost values are report values, not independently audited billing receipts.`;
     renderScoreTable();
-    renderScoreEvidence(activeScoreModelId, 'overall');
+    renderScoreEvidence(activeScoreModelId, 'overall', { open: false });
   }
 
   function renderTechnicalRows() {
-    $('technical-model-list').innerHTML = DATA.comparison.ranked_model_ids.map((id) => {
+    $('technical-model-list').innerHTML = CURRENT_DATA.comparison.ranked_model_ids.map((id) => {
       const model = modelById(id), score = scoreById(id);
-      return `<div class="technical-model-row"><b>${escapeHtml(model.name)}</b><span>${score.speed.latency_seconds.toFixed(2)}s · ${score.tokens.input} input · ${score.tokens.output} output · $${score.cost.usd.toFixed(6)}</span></div>`;
+      return `<div class="technical-model-row"><b>${escapeHtml(model.name)}${model.status === 'reconstructed' ? ' · REPLAY' : ''}</b><span>${score.speed.latency_seconds.toFixed(2)}s · ${score.tokens.input} input · ${score.tokens.output} output · $${score.cost.usd.toFixed(6)}</span></div>`;
     }).join('');
   }
 
   function renderAgreement() {
-    $('agreement-chips').innerHTML = DATA.comparison.shared_findings.map((item) => `<span class="agreement-chip">${escapeHtml(item.label)} · ${formatTime(item.timestamp_seconds)}</span>`).join('');
+    $('agreement-chips').innerHTML = CURRENT_DATA.comparison.shared_findings.map((item) => `<span class="agreement-chip">${escapeHtml(item.label)} · ${formatTime(item.timestamp_seconds)}</span>`).join('');
   }
 
   function renderCompareModelChoices() {
@@ -646,11 +857,17 @@
     selectModel(compareSequenceIds[0], { reset: true, autoplay: true, fromSequence: true });
   }
 
-  $('score-detail-panel').addEventListener('click', (event) => {
+  $('score-evidence-dialog-close').addEventListener('click', () => $('score-evidence-dialog').close());
+  $('score-evidence-dialog-footer-close').addEventListener('click', () => $('score-evidence-dialog').close());
+  $('score-evidence-dialog').addEventListener('click', (event) => {
+    if (event.target === $('score-evidence-dialog')) $('score-evidence-dialog').close();
+  });
+  $('score-evidence-dialog-content').addEventListener('click', (event) => {
     const button = event.target.closest('[data-proof-model][data-proof-event]');
     if (!button) return;
     const modelId = button.dataset.proofModel;
     const eventId = button.dataset.proofEvent;
+    $('score-evidence-dialog').close();
     selectModel(modelId, { reset: false });
     $('comparison-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => selectModelEvent(eventId, true), 180);
@@ -686,6 +903,7 @@
   });
 
   function renderEventHistory() {
+    $('event-history-count').textContent = `${mainEvents.length} EVENTS`;
     $('event-history-list').innerHTML = mainEvents.map((event) => `<div class="event-history-row"><span class="event-time">${escapeHtml(event.timestamp_label)}</span><div><b>${escapeHtml(event.title)}</b><small>${escapeHtml(event.issue_type)} · ${escapeHtml(event.severity)} priority</small></div><button class="btn btn-secondary" type="button" data-history-event="${escapeHtml(event.id)}">Review</button></div>`).join('');
     $('event-history-list').querySelectorAll('[data-history-event]').forEach((button) => {
       button.addEventListener('click', () => {

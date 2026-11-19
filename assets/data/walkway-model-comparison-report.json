@@ -1,0 +1,655 @@
+{
+  "project": "FACTORYLENS",
+  "source_video": {
+    "filename": "factory_floor_marked_pedestrian_walkway.mp4",
+    "title": "Factory floor with marked pedestrian walkway",
+    "duration_seconds": 14.98,
+    "url": "assets/videos/factory-walkway-input.mp4",
+    "poster": "assets/videos/factory-walkway-input.jpg",
+    "size_label": "H.264 · 720p"
+  },
+  "models": [
+    {
+      "model_id": "nvidia/nemotron-3.5-super-vl:free",
+      "name": "Nemotron 3.5 Super VL",
+      "provider_name": "NVIDIA",
+      "status": "completed",
+      "status_label": "NVIDIA · Review complete",
+      "findings_count": 2,
+      "summary": "The model identified a worker walking outside the marked aisle and a metal coil resting on the factory floor.",
+      "video_url": "assets/videos/walkway-nemotron-3-5-super-vl.mp4",
+      "poster": "assets/videos/walkway-nemotron-3-5-super-vl.jpg",
+      "observations": [
+        {
+          "id": "svl-1",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "WORKERS WALKING OUTSIDE MARKED AISLE",
+          "severity": "medium",
+          "confidence": "medium",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker is walking in the central aisle outside the marked green pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 68.6,
+            "detail": "PERSON · 68.6% detector confidence"
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "svl-2",
+          "timestamp_seconds": 14,
+          "timestamp_label": "00:14",
+          "context_start": 11,
+          "context_end": 14.98,
+          "title": "COIL RESTING ON FACTORY FLOOR",
+          "severity": "low",
+          "confidence": "high",
+          "issue_type": "Other Visible Condition",
+          "visible_evidence": "A large metal coil is resting on the factory floor near machinery and a yellow floor line.",
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "No matching YOLO subject was assigned to this visible condition."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
+        }
+      ]
+    },
+    {
+      "model_id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "Nemotron 3 Nano Omni 30B A3B",
+      "provider_name": "NVIDIA",
+      "status": "completed",
+      "status_label": "NVIDIA · Review complete",
+      "findings_count": 5,
+      "summary": "The model reported a visible dust-like plume and four observations of workers outside the marked pedestrian walkway.",
+      "video_url": "assets/videos/walkway-nemotron-3-nano-omni.mp4",
+      "poster": "assets/videos/walkway-nemotron-3-nano-omni.jpg",
+      "observations": [
+        {
+          "id": "nano-1",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "DUST PLUME VISIBLE",
+          "severity": "medium",
+          "confidence": "medium",
+          "issue_type": "Visible Dust Or Particulate",
+          "visible_evidence": "A faint dust-like cloud is visible in the central factory-floor area near the machinery; the supplied frames do not establish its source or exposure level.",
+          "subject_link": {
+            "status": "not_applicable",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "A dust plume is a visual condition, not a COCO object class recognised by the current YOLO model."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
+        },
+        {
+          "id": "nano-2",
+          "timestamp_seconds": 2,
+          "timestamp_label": "00:02",
+          "context_start": 0,
+          "context_end": 5,
+          "title": "WORKER OUTSIDE MARKED WALKWAY",
+          "severity": "low",
+          "confidence": "high",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker is standing on the concrete floor outside the green and yellow painted pedestrian walkway on the right side of the image.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 35.2,
+            "detail": "PERSON · 35.2% detector confidence"
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Nemotron 3.5 Super VL"
+          }
+        },
+        {
+          "id": "nano-3",
+          "timestamp_seconds": 4,
+          "timestamp_label": "00:04",
+          "context_start": 1,
+          "context_end": 7,
+          "title": "WORKER OUTSIDE MARKED WALKWAY",
+          "severity": "low",
+          "confidence": "high",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker remains on the central concrete floor outside the painted pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 68.7,
+            "detail": "PERSON · 68.7% detector confidence"
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Nemotron 3.5 Super VL"
+          }
+        },
+        {
+          "id": "nano-4",
+          "timestamp_seconds": 7,
+          "timestamp_label": "00:07",
+          "context_start": 4,
+          "context_end": 10,
+          "title": "WORKER OUTSIDE MARKED WALKWAY",
+          "severity": "low",
+          "confidence": "high",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker is visible in the central aisle outside the green and yellow pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 73.8,
+            "detail": "PERSON · 73.8% detector confidence"
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
+        },
+        {
+          "id": "nano-5",
+          "timestamp_seconds": 11,
+          "timestamp_label": "00:11",
+          "context_start": 8,
+          "context_end": 14,
+          "title": "WORKER OUTSIDE MARKED WALKWAY",
+          "severity": "low",
+          "confidence": "high",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker continues moving in the central aisle outside the marked pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 64.0,
+            "detail": "PERSON · approximately 64% detector confidence from the visible annotation label."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
+        }
+      ]
+    },
+    {
+      "model_id": "inclusionai/ling-3.2-flash:free",
+      "name": "Ling 3.2 Flash",
+      "provider_name": "InclusionAI",
+      "status": "reconstructed",
+      "status_label": "InclusionAI · REPLAY",
+      "findings_count": 6,
+      "summary": "Reconstructed from the six main-inspection timestamps because the recorded Ling benchmark request returned OpenRouter HTTP 429. The supplied Ling-named MP4 is byte-identical to the main annotated output; these event records must not be represented as a raw Ling model response.",
+      "video_url": "assets/videos/walkway-main-annotated.mp4",
+      "poster": "assets/videos/walkway-main-annotated.jpg",
+      "observations": [
+        {
+          "id": "ling-recon-01",
+          "timestamp_seconds": 1,
+          "timestamp_label": "00:01",
+          "context_start": 0,
+          "context_end": 4,
+          "title": "WORKERS POSITIONED OUTSIDE MARKED GREEN PEDESTRIAN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker is visible in the central concrete aisle rather than inside the green pedestrian route bordered by yellow floor lines on the right side of the factory floor.",
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "No dedicated matching YOLO subject box was retained for this observation."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "ling-recon-02",
+          "timestamp_seconds": 3,
+          "timestamp_label": "00:03",
+          "context_start": 0,
+          "context_end": 6,
+          "title": "WORKERS REMAIN OUTSIDE MARKED GREEN PEDESTRIAN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "Workers remain in the central aisle while the marked green pedestrian lane runs separately along the right side of the image.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "ling-recon-03",
+          "timestamp_seconds": 6,
+          "timestamp_label": "00:06",
+          "context_start": 3,
+          "context_end": 9,
+          "title": "WORKERS WALKING IN CENTRAL AISLE OUTSIDE GREEN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker walks through the central aisle, outside the clearly painted green pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "ling-recon-04",
+          "timestamp_seconds": 8,
+          "timestamp_label": "00:08",
+          "context_start": 5,
+          "context_end": 11,
+          "title": "WORKERS STILL OUTSIDE MARKED PEDESTRIAN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker continues along the central floor area rather than following the marked green pedestrian lane.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "ling-recon-05",
+          "timestamp_seconds": 10,
+          "timestamp_label": "00:10",
+          "context_start": 7,
+          "context_end": 13,
+          "title": "WORKER WALKING TOWARD CAMERA OUTSIDE GREEN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "A worker walks toward the camera through the central aisle, outside the marked green route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        },
+        {
+          "id": "ling-recon-06",
+          "timestamp_seconds": 12,
+          "timestamp_label": "00:12",
+          "context_start": 9,
+          "context_end": 14.98,
+          "title": "WORKER CONTINUES WALKING OUTSIDE MARKED GREEN LANE",
+          "severity": "low",
+          "confidence": "low",
+          "issue_type": "Pedestrian Walkway Violation",
+          "visible_evidence": "The worker continues moving through the central aisle outside the green pedestrian route.",
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated (time-window match)",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
+        }
+      ],
+      "reconstruction_note": "The supplied Ling 3.2 Flash benchmark request did not complete: OpenRouter returned HTTP 429 (rate limit). The provided Ling-named annotated MP4 is byte-for-byte identical to the main annotated video, so it is not independent evidence of a Ling model response. The six event timestamps and labels below are reconstructed from the main inspection timeline, not returned by Ling. YOLO alignment (5/6) is inferred from the main annotation overlays; cross-model agreement (6/6) is an approximate same-event comparison against the two available NVIDIA model outputs. Latency (32.45s) is borrowed from the Ling run in the existing first-video demo, tokens (12,079 input + 1,120 output) are estimated, and $0.000000 cost is assumed for a free route rather than provider-reported. Consequently the 83.5/100 score and EST. BETTER rank are illustrative estimates and must not be presented as measured Ling performance."
+    }
+  ],
+  "comparison": {
+    "weights": [
+      {
+        "key": "yolo",
+        "label": "YOLO subject alignment",
+        "weight": 35,
+        "description": "Share of eligible subject findings linked to a matching YOLO subject."
+      },
+      {
+        "key": "corroboration",
+        "label": "Cross-model corroboration",
+        "weight": 25,
+        "description": "Share of findings also reported by another selected model within a ±5-second time window."
+      },
+      {
+        "key": "structure",
+        "label": "Structured output completeness",
+        "weight": 12,
+        "description": "Share of findings with a non-empty title, issue category, and timestamp."
+      },
+      {
+        "key": "speed",
+        "label": "Response speed",
+        "weight": 12,
+        "description": "Relative runtime; the fastest available model receives the full score."
+      },
+      {
+        "key": "tokens",
+        "label": "Token efficiency",
+        "weight": 8,
+        "description": "Relative token use; the lowest total token count receives the full score."
+      },
+      {
+        "key": "cost",
+        "label": "Cost efficiency",
+        "weight": 8,
+        "description": "Provider-reported cost when available; the reconstructed Ling value is an explicit assumption."
+      }
+    ],
+    "ranked_model_ids": [
+      "nvidia/nemotron-3.5-super-vl:free",
+      "inclusionai/ling-3.2-flash:free",
+      "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
+    ],
+    "scores": {
+      "nvidia/nemotron-3.5-super-vl:free": {
+        "rank": "BEST",
+        "score": 87.5,
+        "findings_reported": 2,
+        "yolo": {
+          "numerator": 1,
+          "denominator": 1,
+          "percent": 100.0,
+          "points": 35.0
+        },
+        "corroboration": {
+          "numerator": 1,
+          "denominator": 2,
+          "percent": 50.0,
+          "points": 12.5
+        },
+        "structure": {
+          "numerator": 2,
+          "denominator": 2,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "speed": {
+          "latency_seconds": 4.75,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "tokens": {
+          "input": 12078,
+          "output": 397,
+          "total": 12475,
+          "percent": 100.0,
+          "points": 8.0
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0
+        }
+      },
+      "inclusionai/ling-3.2-flash:free": {
+        "rank": "RECON. BETTER",
+        "score": 83.5,
+        "findings_reported": 6,
+        "yolo": {
+          "numerator": 5,
+          "denominator": 6,
+          "percent": 83.3,
+          "points": 29.2,
+          "estimated": true
+        },
+        "corroboration": {
+          "numerator": 6,
+          "denominator": 6,
+          "percent": 100.0,
+          "points": 25.0,
+          "estimated": true
+        },
+        "structure": {
+          "numerator": 6,
+          "denominator": 6,
+          "percent": 100.0,
+          "points": 12.0,
+          "estimated": true
+        },
+        "speed": {
+          "latency_seconds": 32.45,
+          "percent": 14.6,
+          "points": 1.8,
+          "estimated": true,
+          "basis": "Estimated using the 32.45-second Ling latency recorded in the existing first-video demo; not measured for this clip."
+        },
+        "tokens": {
+          "input": 12079,
+          "output": 1120,
+          "total": 13199,
+          "percent": 94.5,
+          "points": 7.6,
+          "estimated": true,
+          "basis": "Estimated output volume for six short findings; input tokens approximated from the same run-level prompt/frame payload size shown for the other models."
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0,
+          "estimated": true,
+          "basis": "Assumed zero for a free route; no provider usage record or billing receipt was supplied."
+        },
+        "estimated": true
+      },
+      "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+        "rank": "GOOD",
+        "score": 75.9,
+        "findings_reported": 5,
+        "yolo": {
+          "numerator": 4,
+          "denominator": 4,
+          "percent": 100.0,
+          "points": 35.0
+        },
+        "corroboration": {
+          "numerator": 2,
+          "denominator": 5,
+          "percent": 40.0,
+          "points": 10.0
+        },
+        "structure": {
+          "numerator": 5,
+          "denominator": 5,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "speed": {
+          "latency_seconds": 17.51,
+          "percent": 27.1,
+          "points": 3.3
+        },
+        "tokens": {
+          "input": 12079,
+          "output": 950,
+          "total": 13029,
+          "percent": 95.7,
+          "points": 7.7
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0
+        }
+      }
+    },
+    "shared_findings": [
+      {
+        "label": "Pedestrian Walkway Violation",
+        "timestamp_seconds": 2
+      }
+    ],
+    "method_note": "The first two model metric values are transcribed from the supplied screen recording. Ling 3.2 Flash returned OpenRouter HTTP 429 in that recording. Its six observations were reconstructed from the main inspection timeline, and its latency/token/cost values are estimates. BEST/BETTER/GOOD are comparative indicators for this demo only; they are not ground-truth accuracy results. Cross-model agreement is a consistency signal, not proof of correctness."
+  },
+  "recorded_measurements": {
+    "nvidia/nemotron-3.5-super-vl:free": {
+      "findings_reported": 2,
+      "yolo": "1/1 · 100%",
+      "corroboration": "1/2 · 50%",
+      "structure": "2/2 · 100%",
+      "latency_seconds": 4.75,
+      "tokens": {
+        "input": 12078,
+        "output": 397,
+        "total": 12475
+      },
+      "cost_usd": 0.0
+    },
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+      "findings_reported": 5,
+      "yolo": "4/4 · 100%",
+      "corroboration": "2/5 · 40%",
+      "structure": "5/5 · 100%",
+      "latency_seconds": 17.51,
+      "tokens": {
+        "input": 12079,
+        "output": 950,
+        "total": 13029
+      },
+      "cost_usd": 0.0
+    },
+    "inclusionai/ling-3.2-flash:free": {
+      "recorded_status": "unavailable",
+      "recorded_error": "OpenRouter HTTP 429 provider rate limit",
+      "findings_reported": 0,
+      "latency": "not reported",
+      "tokens": "not reported",
+      "cost": "not reported"
+    }
+  },
+  "reconstructed_ling_estimate": {
+    "observations_reconstructed_from_main_timestamps": [
+      "00:01",
+      "00:03",
+      "00:06",
+      "00:08",
+      "00:10",
+      "00:12"
+    ],
+    "score": {
+      "rank": "RECON. BETTER",
+      "score": 83.5,
+      "findings_reported": 6,
+      "yolo": {
+        "numerator": 5,
+        "denominator": 6,
+        "percent": 83.3,
+        "points": 29.2,
+        "estimated": true
+      },
+      "corroboration": {
+        "numerator": 6,
+        "denominator": 6,
+        "percent": 100.0,
+        "points": 25.0,
+        "estimated": true
+      },
+      "structure": {
+        "numerator": 6,
+        "denominator": 6,
+        "percent": 100.0,
+        "points": 12.0,
+        "estimated": true
+      },
+      "speed": {
+        "latency_seconds": 32.45,
+        "percent": 14.6,
+        "points": 1.8,
+        "estimated": true,
+        "basis": "Estimated using the 32.45-second Ling latency recorded in the existing first-video demo; not measured for this clip."
+      },
+      "tokens": {
+        "input": 12079,
+        "output": 1120,
+        "total": 13199,
+        "percent": 94.5,
+        "points": 7.6,
+        "estimated": true,
+        "basis": "Estimated output volume for six short findings; input tokens approximated from the same run-level prompt/frame payload size shown for the other models."
+      },
+      "cost": {
+        "usd": 0.0,
+        "percent": 100.0,
+        "points": 8.0,
+        "estimated": true,
+        "basis": "Assumed zero for a free route; no provider usage record or billing receipt was supplied."
+      },
+      "estimated": true
+    },
+    "latency_basis": "Estimated using the 32.45-second Ling latency recorded in the existing first-video demo; not measured for this clip.",
+    "token_basis": "Estimated output volume for six short findings; input tokens approximated from the same run-level prompt/frame payload size shown for the other models.",
+    "cost_basis": "Assumed zero for a free route; no provider usage record or billing receipt was supplied."
+  },
+  "evaluation_limitations": [
+    "The actual Ling request in the supplied recording did not complete; its raw model output was unavailable due to HTTP 429.",
+    "The uploaded Ling-named annotated MP4 is byte-identical to the main annotated inspection MP4. It is used only to keep the playback timeline functional for the reconstructed view.",
+    "Ling observations and Ling score metrics are estimates reconstructed from the main annotated output and prior-demo baseline values; they must not be presented as measured Ling performance.",
+    "Precision, recall, F1 and mAP cannot be calculated without manually labelled ground truth and a defined matching protocol.",
+    "Model agreement does not establish correctness; the route designation and site rules require confirmation by site personnel."
+  ],
+  "metadata": {
+    "dataset_id": "factory-walkway",
+    "project": "FACTORYLENS",
+    "version": "1.3.0",
+    "demo_type": "github_pages_recorded_replay",
+    "title": "Factory floor with marked pedestrian walkway",
+    "created_from": "The supplied second source MP4, main annotated result, three model-named annotated outputs, and two screen recordings.",
+    "source_recordings": [
+      "screen-recording-1(4).mp4",
+      "screen-recording-2(4).mp4"
+    ],
+    "report_provenance": "The six main-inspection event labels and timestamps were read from the supplied main annotated video and screen recording. SuperVL and Nano findings and comparison metrics were transcribed from model videos and screen recording. Ling was unavailable in the recorded run due to OpenRouter HTTP 429; the Ling event records and its score metrics are clearly marked reconstructed/estimated. The Ling-named annotated MP4 is byte-for-byte identical to the main annotated MP4; it is not an independent Ling model output.",
+    "static_hosting_note": "GitHub Pages replays saved video files and JSON. It does not run FastAPI, YOLO, OpenCV, or live OpenRouter inference.",
+    "ling_recorded_status": "Unavailable: OpenRouter HTTP 429; no completed Ling response, latency, token usage, or provider cost was captured for this second clip."
+  }
+}

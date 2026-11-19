@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d171e">
-  <meta name="description" content="FactoryLens industrial video inspection demo">
+  <meta name="description" content="FactoryLens industrial video inspection demo with evidence-linked annotations and recorded multi-model comparison.">
   <title>FACTORYLENS | Industrial Intelligence</title>
   <link rel="icon" href="assets/videos/factory-input.jpg" type="image/jpeg">
   <link rel="stylesheet" href="styles.css">
@@ -47,7 +47,7 @@
         <div class="workspace-intro">
           <div class="eyebrow">FACTORYLENS / INDUSTRIAL VIDEO REVIEW</div>
           <h1>Video inspection</h1>
-          <p>Review factory footage, inspect timestamped observations, and compare the saved interpretations from three vision models.</p>
+          <p>Choose a factory video to inspect. The AI reviewer will sample the footage, identify potential safety and operational issues, and link each finding to its YOLO subject detection.</p>
         </div>
 
         <section class="panel source-panel" id="source-section">
@@ -59,7 +59,8 @@
             <div class="source-select-wrap">
               <label class="field-label" for="sample-select">Factory video library</label>
               <select id="sample-select" class="field">
-                <option value="factory-input">Industrial factory operation with machinery and workers · 01:00</option>
+                <option value="factory-materials">Industrial factory operation with machinery and workers · 01:00</option>
+                <option value="factory-walkway">Factory floor with marked pedestrian walkway · 00:15</option>
               </select>
             </div>
             <label class="upload-control" for="video-file"><span class="upload-symbol">↑</span><span><b>Choose another video</b></span><input id="video-file" type="file" accept="video/*"></label>
@@ -72,7 +73,7 @@
             </video>
             <div class="video-empty-state hidden" id="video-placeholder"><b>Video preview unavailable</b><span>Check that the supplied MP4 is present in assets/videos.</span></div>
           </div>
-          <div class="source-foot"><span class="tiny-live-dot"></span><span id="source-foot-message">Waiting for a video inspection.</span><span class="source-foot-right">LOCAL DEMO · SAVED RESULT REPLAY</span></div>
+          <div class="source-foot"><span class="tiny-live-dot"></span><span id="source-foot-message">Waiting for a video inspection.</span><span class="source-foot-right">LOCAL DEMO</span></div>
           <div class="progress-wrap hidden" id="analysis-progress-wrap">
             <div class="progress-meta"><span id="progress-label">Preparing video review…</span><b id="progress-percent">0%</b></div>
             <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
@@ -92,7 +93,7 @@
                 <video id="annotated-player" controls playsinline preload="metadata" poster="assets/videos/main-annotated.jpg"></video>
                 <div class="video-annotation-legend"><span><i class="legend-square issue-square"></i>AI finding banner</span><span><i class="legend-square yolo-square"></i>YOLO subject box in finding colour</span></div>
               </div>
-              <div class="result-video-note">The recorded 25-second annotated output is linked to the selected timestamp. Use the event timeline to review each evidence window.</div>
+              <div class="result-video-note">The recorded annotated output is linked to the selected timestamp. Use the event timeline to review each evidence window.</div>
             </div>
             <aside class="event-column" aria-label="Event timeline and observations">
               <div class="timeline-heading"><div><b>Event timeline</b><small>Choose a timestamp to jump straight to that moment.</small></div><span class="timeline-count" id="event-count-label">6 events</span></div>
@@ -108,7 +109,7 @@
                 <section class="heatmap-panel"><div class="heatmap-panel-title"><div><b>When events appeared</b><small>AI observations across the reviewed clip</small></div></div><div class="temporal-heatmap" id="temporal-heatmap"></div></section>
                 <section class="heatmap-panel"><div class="heatmap-panel-title"><div><b>Where findings appeared</b><small>Matched YOLO subject locations only</small></div></div><div class="spatial-heatmap" id="spatial-heatmap"><div class="spatial-grid-lines"></div></div><div class="heatmap-note" id="spatial-heatmap-note"></div></section>
               </div>
-              <div class="heatmap-footnote">4/6 AI findings linked to YOLO · 4 matched subject boxes. Each plotted point uses its finding's colour. Unmatched or ambiguous detections are not plotted. Heat intensity is a visual summary, not a calibrated risk score.</div>
+              <div class="heatmap-footnote" id="heatmap-footnote">4/6 AI findings linked to YOLO · 4 matched subject boxes. Each plotted point uses its finding's colour. Unmatched or ambiguous detections are not plotted. Heat intensity is a visual summary, not a calibrated risk score.</div>
             </div>
           </details>
 
@@ -116,8 +117,7 @@
             <summary><span class="summary-plus">＋</span><span>Inspection details and warnings</span></summary>
             <div class="technical-content">
               <div class="result-metrics" id="result-metrics"></div>
-              <p class="technical-warning">This is a precomputed replay of the supplied inspection. It does not run new inference on GitHub Pages. AI observations are review candidates, not confirmed faults, diagnoses, or compliance determinations.</p>
-              <div class="download-row"><a class="btn btn-secondary" href="assets/data/inspection-report.json" download="factorylens-inspection-report.json">Download inspection report</a><a class="btn btn-quiet" href="assets/videos/main-annotated.mp4" download>Download annotated video</a></div>
+              <div class="download-row"><a class="btn btn-secondary" id="main-inspection-report-link" href="assets/data/inspection-report.json" download="factorylens-inspection-report.json">Download inspection report</a><a class="btn btn-quiet" id="main-annotated-download-link" href="assets/videos/main-annotated.mp4" download>Download annotated video</a></div>
             </div>
           </details>
 
@@ -132,14 +132,12 @@
             </div>
             <div class="compare-model-options" id="compare-model-options" aria-label="Models included in this recorded comparison"></div>
             <div class="compare-launch-action">
-              <span class="compare-launch-note">Three saved model runs are included in this GitHub Pages demo.</span>
               <button class="btn btn-primary" id="open-comparison" type="button">Compare selected AI reviewers <span>→</span></button>
             </div>
             <div class="model-compare-progress hidden" id="model-compare-progress" role="status" aria-live="polite">
               <div class="progress-meta"><span id="model-compare-progress-label">Comparing selected models…</span><b id="model-compare-progress-percent">0%</b></div>
               <div class="progress-track"><div class="progress-bar" id="model-compare-progress-bar"></div></div>
             </div>
-            <p class="compare-launch-disclaimer">The page loads the supplied, precomputed model outputs; it does not send new requests to external AI providers. Model agreement is a consistency signal, not proof of accuracy.</p>
           </section>
         </section>
 
@@ -155,29 +153,29 @@
               </div>
               <div class="model-playback-message hidden" id="model-playback-message"></div>
               <div class="model-play-actions"><button class="btn btn-primary" id="play-all-model-reviews">▶ Play all model videos</button><span>Plays each available model's annotated video in sequence.</span></div>
-              <div class="model-events-heading"><div><b>Events in this AI review</b><small>Choose a finding to play its context window (up to 3 seconds before and after).</small></div></div>
-              <div class="model-event-cards" id="model-event-cards"></div>
             </div>
             <aside class="selected-model-panel">
               <div class="selected-model-head"><div class="eyebrow">SELECTED MODEL</div><h3 id="active-model-name">Nemotron 3.5 Super VL</h3><small id="active-model-provider">NVIDIA · Review complete</small></div>
               <div class="selected-model-summary" id="active-model-summary"></div>
-              <div class="model-review-observations" id="active-model-observations"></div>
               <div class="association-note"><div class="association-icon">◎</div><div><b>AI–YOLO subject association</b><p>Each AI finding supplies a subject class and, when needed, a subject-specific box. YOLO draws only the matching detection in that finding's colour; it does not draw unrelated objects as annotations.</p></div></div>
+              <section class="selected-model-events" aria-label="Selected model event timeline">
+                <div class="selected-model-events-heading"><div><b>MODEL EVENT TIMELINE</b><small>Select a timestamp to play its context and expand What Was Observed.</small></div><span id="selected-model-event-count">0 EVENTS</span></div>
+                <div class="model-review-observations"><div class="model-event-cards model-event-accordion-list" id="model-event-cards" aria-live="polite"></div></div>
+              </section>
             </aside>
           </div>
 
           <section class="scorecard-section" id="scorecard-section">
-            <div class="scorecard-intro"><div><div class="eyebrow">MODEL PERFORMANCE SCORECARD</div><h3>Measured comparison, not an accuracy claim.</h3><p>BEST, BETTER and GOOD are ranked from measured evidence: YOLO subject matching, model-to-model corroboration, structured output, response time and token/cost efficiency. Select any result to inspect its proof summary.</p></div><span class="scorecard-tag">RUN SCORECARD</span></div>
+            <div class="scorecard-intro"><div><div class="eyebrow">MODEL PERFORMANCE SCORECARD</div><h3>Comparative scorecard, not an accuracy claim.</h3><p>BEST, BETTER and GOOD are relative positions based on the saved comparison criteria. Each model has its own saved comparison results for this clip. Select any model score or criterion value to open a detailed, dismissible evidence dossier.</p></div><span class="scorecard-tag">RUN SCORECARD</span></div>
             <div class="scorecard-rankings" id="scorecard-rankings"></div>
             <div class="score-table-wrap"><table class="score-table" id="score-table"></table></div>
             <div class="score-method-note" id="score-method-note"></div>
-            <div class="score-detail-panel" id="score-detail-panel"></div>
           </section>
 
           <section class="cross-model-panel"><div><div class="eyebrow">CROSS-MODEL CORROBORATION</div><b>Findings reported by more than one model</b><p>Agreement is a consistency signal; it does not independently establish that an observation is true.</p></div><div class="agreement-chips" id="agreement-chips"></div></section>
           <details class="accordion-panel technical-details comparison-technical-details">
             <summary><span class="summary-plus">＋</span><span>Show technical performance details</span></summary>
-            <div class="technical-content"><div class="technical-model-list" id="technical-model-list"></div><a class="btn btn-secondary" href="assets/data/model-comparison-report.json" download="factorylens-model-comparison-report.json">Download comparison report</a></div>
+            <div class="technical-content"><div class="technical-model-list" id="technical-model-list"></div><a class="btn btn-secondary" id="comparison-report-link" href="assets/data/model-comparison-report.json" download="factorylens-model-comparison-report.json">Download comparison report</a></div>
           </details>
           <div class="comparison-disclaimer"><span><i class="legend-square yolo-square"></i>AI-linked YOLO subject</span><span><i class="legend-square issue-square"></i>AI issue observation</span><span>Every AI observation is a review candidate, not a certified safety finding.</span></div>
         </section>
@@ -185,15 +183,30 @@
 
       <section class="page" id="page-events" aria-label="Event history">
         <div class="workspace-intro"><div class="eyebrow">WORKSPACE / EVENT REGISTER</div><h1>Event history</h1><p>Review the timestamped observations from the saved factory inspection.</p></div>
-        <section class="panel event-history-panel"><div class="panel-head"><div><div class="eyebrow">RECORDED INSPECTION</div><h2>Inspection event register</h2></div><span class="status-label success">6 EVENTS</span></div><div class="event-history-list" id="event-history-list"></div></section>
+        <section class="panel event-history-panel"><div class="panel-head"><div><div class="eyebrow">RECORDED INSPECTION</div><h2>Inspection event register</h2></div><span class="status-label success" id="event-history-count">6 EVENTS</span></div><div class="event-history-list" id="event-history-list"></div></section>
         <button type="button" class="btn btn-secondary" data-page="video">← Back to video inspection</button>
       </section>
 
       <footer class="app-footer"><span>FACTORYLENS · Industrial safety and condition monitoring research prototype</span><span>AI-ASSISTED VIDEO REVIEW · EVIDENCE-LINKED ANNOTATIONS</span></footer>
     </main>
   </div>
+  <dialog class="score-evidence-dialog" id="score-evidence-dialog" aria-labelledby="score-evidence-dialog-title" aria-describedby="score-evidence-dialog-subtitle">
+    <div class="score-evidence-dialog-shell">
+      <header class="score-evidence-dialog-header">
+        <div class="score-evidence-dialog-heading">
+          <span class="eyebrow">MODEL PERFORMANCE · EVIDENCE DOSSIER</span>
+          <h2 id="score-evidence-dialog-title">Score evidence</h2>
+          <p id="score-evidence-dialog-subtitle"></p>
+        </div>
+        <button class="score-evidence-dialog-close" id="score-evidence-dialog-close" type="button" aria-label="Close evidence dialog">×</button>
+      </header>
+      <div class="score-evidence-dialog-content" id="score-evidence-dialog-content"></div>
+      <footer class="score-evidence-dialog-footer"><span>Evidence is limited to the records included in this static demo.</span><button type="button" class="btn btn-secondary" id="score-evidence-dialog-footer-close">Close evidence</button></footer>
+    </div>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="assets/data/demo-data.js"></script>
+  <script src="assets/data/walkway-demo-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

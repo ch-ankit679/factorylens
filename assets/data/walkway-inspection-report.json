@@ -1,0 +1,162 @@
+{
+  "project": "FACTORYLENS",
+  "source_video": {
+    "filename": "factory_floor_marked_pedestrian_walkway.mp4",
+    "title": "Factory floor with marked pedestrian walkway",
+    "duration_seconds": 14.98,
+    "url": "assets/videos/factory-walkway-input.mp4",
+    "poster": "assets/videos/factory-walkway-input.jpg",
+    "size_label": "H.264 · 720p"
+  },
+  "inspection": {
+    "job_id": "factorylens-walkway-recorded-inspection",
+    "status": "completed",
+    "progress": 100,
+    "source_name": "Factory floor with marked pedestrian walkway",
+    "duration_seconds": 14.98,
+    "output_url": "assets/videos/walkway-main-annotated.mp4",
+    "poster": "assets/videos/walkway-main-annotated.jpg",
+    "analysis_provider": "Recorded vision review + YOLO object-detection annotations",
+    "event_count": 6,
+    "analysis_summary": "The clip shows an indoor factory floor with large machinery on the left and a wide central aisle. A green pedestrian route bordered by yellow lines runs along the right side. Across the reviewed timestamps, workers are visible walking or standing in the central aisle outside that marked route. The recording does not clearly establish whether the route is mandatory for every activity. No clear spill, fire, sparks, major dust plume, moving vehicle, or machine-guarding defect is supported by the supplied frames.",
+    "events": [
+      {
+        "id": "walkway-inspection-01",
+        "timestamp_seconds": 1,
+        "timestamp_label": "00:01",
+        "context_start": 0,
+        "context_end": 4,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKERS POSITIONED OUTSIDE MARKED GREEN PEDESTRIAN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "A worker is visible in the central concrete aisle rather than inside the green pedestrian route bordered by yellow floor lines on the right side of the factory floor.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      },
+      {
+        "id": "walkway-inspection-02",
+        "timestamp_seconds": 3,
+        "timestamp_label": "00:03",
+        "context_start": 0,
+        "context_end": 6,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKERS REMAIN OUTSIDE MARKED GREEN PEDESTRIAN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "Workers remain in the central aisle while the marked green pedestrian lane runs separately along the right side of the image.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      },
+      {
+        "id": "walkway-inspection-03",
+        "timestamp_seconds": 6,
+        "timestamp_label": "00:06",
+        "context_start": 3,
+        "context_end": 9,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKERS WALKING IN CENTRAL AISLE OUTSIDE GREEN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "A worker walks through the central aisle, outside the clearly painted green pedestrian route.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      },
+      {
+        "id": "walkway-inspection-04",
+        "timestamp_seconds": 8,
+        "timestamp_label": "00:08",
+        "context_start": 5,
+        "context_end": 11,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKERS STILL OUTSIDE MARKED PEDESTRIAN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "A worker continues along the central floor area rather than following the marked green pedestrian lane.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      },
+      {
+        "id": "walkway-inspection-05",
+        "timestamp_seconds": 10,
+        "timestamp_label": "00:10",
+        "context_start": 7,
+        "context_end": 13,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKER WALKING TOWARD CAMERA OUTSIDE GREEN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "A worker walks toward the camera through the central aisle, outside the marked green route.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      },
+      {
+        "id": "walkway-inspection-06",
+        "timestamp_seconds": 12,
+        "timestamp_label": "00:12",
+        "context_start": 9,
+        "context_end": 14.98,
+        "issue_type": "Pedestrian Walkway Violation",
+        "title": "WORKER CONTINUES WALKING OUTSIDE MARKED GREEN LANE",
+        "severity": "low",
+        "confidence": "low",
+        "visible_evidence": "The worker continues moving through the central aisle outside the green pedestrian route.",
+        "why_it_matters": "Walking outside a marked pedestrian route may increase the chance of interaction with nearby machinery, material movement, or vehicle traffic. The footage alone does not establish the site rule or whether the movement was authorised.",
+        "recommended_follow_up": "Confirm that the green/yellow marking is the designated pedestrian route for this area, then review the task and reinforce the site traffic-separation procedure where applicable."
+      }
+    ],
+    "heatmap": {
+      "duration_seconds": 14.98,
+      "tracks": [
+        {
+          "label": "Pedestrian Walkway Violation",
+          "times": [
+            1,
+            3,
+            6,
+            8,
+            10,
+            12
+          ]
+        }
+      ],
+      "matched_findings": 5,
+      "total_findings": 6,
+      "matched_subject_boxes": 5,
+      "spatial_points": [
+        {
+          "x": 0.76,
+          "y": 0.4,
+          "label": "Approximate worker location 1"
+        },
+        {
+          "x": 0.79,
+          "y": 0.46,
+          "label": "Approximate worker location 2"
+        },
+        {
+          "x": 0.82,
+          "y": 0.51,
+          "label": "Approximate worker location 3"
+        },
+        {
+          "x": 0.85,
+          "y": 0.58,
+          "label": "Approximate worker location 4"
+        },
+        {
+          "x": 0.8,
+          "y": 0.64,
+          "label": "Approximate worker location 5"
+        }
+      ],
+      "spatial_note": "Five matched worker locations are approximate visual reconstructions from the annotated playback, not calibrated coordinates."
+    }
+  },
+  "limitations": [
+    "The clip is a sparse-frame visual review, not continuous temporal tracking.",
+    "The green/yellow floor marking appears to define a pedestrian route, but the footage does not prove the facility policy or whether each worker was authorised to be outside it.",
+    "YOLO associations and plotted heatmap coordinates are limited to the supplied annotations; spatial points are approximate.",
+    "AI observations are review candidates, not confirmed safety violations or legal determinations."
+  ]
+}

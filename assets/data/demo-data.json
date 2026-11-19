@@ -4,9 +4,14 @@
     "version": "1.3.0",
     "demo_type": "github_pages_recorded_replay",
     "created_from": "The uploaded latest-project screen recordings and the five supplied input/result MP4 files.",
-    "source_recordings": ["screen-recording-1.mp4", "screen-recording-2.mp4"],
+    "source_recordings": [
+      "screen-recording-1.mp4",
+      "screen-recording-2.mp4"
+    ],
     "report_provenance": "The visible event labels, summaries, model counts, comparison values, latency, and token totals were transcribed from the supplied screen recordings. The original backend JSON responses were not supplied.",
-    "static_hosting_note": "GitHub Pages cannot run the original FastAPI, YOLO, OpenCV, or OpenRouter inference services. This site replays the exact supplied input and saved outputs; it does not analyse new uploads."
+    "static_hosting_note": "GitHub Pages cannot run the original FastAPI, YOLO, OpenCV, or OpenRouter inference services. This site replays the exact supplied input and saved outputs; it does not analyse new uploads.",
+    "dataset_id": "factory-materials",
+    "title": "Industrial factory operation with machinery and workers"
   },
   "source_video": {
     "filename": "01_factory_machinery_workers_pexels.mp4",
@@ -14,7 +19,7 @@
     "duration_seconds": 60.24,
     "url": "assets/videos/factory-input.mp4",
     "poster": "assets/videos/factory-input.jpg",
-    "size_label": "H.264 · 720p"
+    "size_label": "H.264 \u00b7 720p"
   },
   "inspection": {
     "job_id": "factorylens-recorded-inspection",
@@ -116,17 +121,47 @@
     "heatmap": {
       "duration_seconds": 25,
       "tracks": [
-        {"label": "Visible Dust Or Particulate", "times": [0, 9, 14]},
-        {"label": "Worker Machine Proximity", "times": [4, 19, 24]}
+        {
+          "label": "Visible Dust Or Particulate",
+          "times": [
+            0,
+            9,
+            14
+          ]
+        },
+        {
+          "label": "Worker Machine Proximity",
+          "times": [
+            4,
+            19,
+            24
+          ]
+        }
       ],
       "matched_findings": 4,
       "total_findings": 6,
       "matched_subject_boxes": 4,
       "spatial_points": [
-        {"x": 0.84, "y": 0.29, "label": "Matched subject 1"},
-        {"x": 0.88, "y": 0.52, "label": "Matched subject 2"},
-        {"x": 0.61, "y": 0.62, "label": "Matched subject 3"},
-        {"x": 0.76, "y": 0.49, "label": "Matched subject 4"}
+        {
+          "x": 0.84,
+          "y": 0.29,
+          "label": "Matched subject 1"
+        },
+        {
+          "x": 0.88,
+          "y": 0.52,
+          "label": "Matched subject 2"
+        },
+        {
+          "x": 0.61,
+          "y": 0.62,
+          "label": "Matched subject 3"
+        },
+        {
+          "x": 0.76,
+          "y": 0.49,
+          "label": "Matched subject 4"
+        }
       ],
       "spatial_note": "Four matched subject locations are shown to mirror the recorded heatmap. Exact detection coordinates were not included in the supplied files; plotted points are approximate visual reconstructions from the screen recording."
     }
@@ -143,18 +178,44 @@
       "poster": "assets/videos/nemotron-3-5-super-vl.jpg",
       "observations": [
         {
-          "id": "nem35-1", "timestamp_seconds": 0, "timestamp_label": "00:00", "context_start": 0, "context_end": 3,
-          "title": "DUST PLUME AT LOADER HOPPER", "severity": "medium", "issue_type": "Visible Dust Or Particulate",
+          "id": "nem35-1",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "DUST PLUME AT LOADER HOPPER",
+          "severity": "medium",
+          "issue_type": "Visible Dust Or Particulate",
           "visible_evidence": "Visible dust cloud around the loader bucket as material is dumped into the hopper.",
-          "subject_link": {"status": "unmatched", "label": "NO YOLO BOX ASSIGNED", "detail": "The AI identified the subject but did not provide a dedicated subject box, so no YOLO box was assigned."},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "The AI identified the subject but did not provide a dedicated subject box, so no YOLO box was assigned."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         },
         {
-          "id": "nem35-2", "timestamp_seconds": 24, "timestamp_label": "00:24", "context_start": 21, "context_end": 25,
-          "title": "WORKER SHOVELLING MATERIAL", "severity": "low", "issue_type": "Worker Machine Proximity",
+          "id": "nem35-2",
+          "timestamp_seconds": 24,
+          "timestamp_label": "00:24",
+          "context_start": 21,
+          "context_end": 25,
+          "title": "WORKER SHOVELLING MATERIAL",
+          "severity": "low",
+          "issue_type": "Worker Machine Proximity",
           "visible_evidence": "A worker in high-visibility clothing and gloves shovels material inside the bin.",
-          "subject_link": {"status": "unmatched", "label": "NO YOLO BOX ASSIGNED", "detail": "The AI identified the subject but did not provide a dedicated subject box, so no YOLO box was assigned."},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "The AI identified the subject but did not provide a dedicated subject box, so no YOLO box was assigned."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         }
       ]
     },
@@ -169,39 +230,112 @@
       "poster": "assets/videos/nemotron-3-nano-omni.jpg",
       "observations": [
         {
-          "id": "nano-1", "timestamp_seconds": 0, "timestamp_label": "00:00", "context_start": 0, "context_end": 3,
-          "title": "LOADER DUMPING MATERIAL", "severity": "medium", "issue_type": "Material Dumping Activity",
+          "id": "nano-1",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "LOADER DUMPING MATERIAL",
+          "severity": "medium",
+          "issue_type": "Material Dumping Activity",
           "visible_evidence": "Yellow front-end loader with bucket raised is dumping material into a green container, creating visible dust plume.",
-          "subject_link": {"status": "linked", "label": "YOLO SUBJECT LINKED", "class": "TRUCK", "confidence": 66.6, "detail": "TRUCK · 66.6% detector confidence"},
-          "corroboration": {"status": "corroborated", "label": "Corroborated", "also_reported_by": "Ling 3.2 Flash"}
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "TRUCK",
+            "confidence": 66.6,
+            "detail": "TRUCK \u00b7 66.6% detector confidence"
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Ling 3.2 Flash"
+          }
         },
         {
-          "id": "nano-2", "timestamp_seconds": 12, "timestamp_label": "00:12", "context_start": 9, "context_end": 15,
-          "title": "DUST PLUME FROM MATERIAL TRANSFER", "severity": "medium", "issue_type": "Visible Dust Or Particulate",
+          "id": "nano-2",
+          "timestamp_seconds": 12,
+          "timestamp_label": "00:12",
+          "context_start": 9,
+          "context_end": 15,
+          "title": "DUST PLUME FROM MATERIAL TRANSFER",
+          "severity": "medium",
+          "issue_type": "Visible Dust Or Particulate",
           "visible_evidence": "Significant dust cloud is visible during material transfer operation, obscuring background elements.",
-          "subject_link": {"status": "unmatched", "label": "NO YOLO BOX ASSIGNED", "detail": "No matching YOLO subject was found at the finding timestamp."},
-          "corroboration": {"status": "corroborated", "label": "Corroborated", "also_reported_by": "Ling 3.2 Flash"}
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "No matching YOLO subject was found at the finding timestamp."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Ling 3.2 Flash"
+          }
         },
         {
-          "id": "nano-3", "timestamp_seconds": 12, "timestamp_label": "00:12", "context_start": 9, "context_end": 15,
-          "title": "PERSON NEAR MACHINERY", "severity": "medium", "issue_type": "Vehicle Person Proximity",
+          "id": "nano-3",
+          "timestamp_seconds": 12,
+          "timestamp_label": "00:12",
+          "context_start": 9,
+          "context_end": 15,
+          "title": "PERSON NEAR MACHINERY",
+          "severity": "medium",
+          "issue_type": "Vehicle Person Proximity",
           "visible_evidence": "A person in orange clothing is visible near the material-transfer equipment.",
-          "subject_link": {"status": "linked", "label": "YOLO SUBJECT LINKED", "class": "PERSON", "confidence": 80.0, "detail": "PERSON · 80.0% detector confidence"},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 80.0,
+            "detail": "PERSON \u00b7 80.0% detector confidence"
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         },
         {
-          "id": "nano-4", "timestamp_seconds": 24, "timestamp_label": "00:24", "context_start": 21, "context_end": 25,
-          "title": "WORKER NEAR LOADER BUCKET", "severity": "medium", "issue_type": "Worker Machine Proximity",
+          "id": "nano-4",
+          "timestamp_seconds": 24,
+          "timestamp_label": "00:24",
+          "context_start": 21,
+          "context_end": 25,
+          "title": "WORKER NEAR LOADER BUCKET",
+          "severity": "medium",
+          "issue_type": "Worker Machine Proximity",
           "visible_evidence": "A worker is visible close to the loader bucket and material-handling area.",
-          "subject_link": {"status": "unmatched", "label": "NO YOLO BOX ASSIGNED", "detail": "No matching YOLO subject was found at the finding timestamp."},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "No matching YOLO subject was found at the finding timestamp."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         },
         {
-          "id": "nano-5", "timestamp_seconds": 24, "timestamp_label": "00:24", "context_start": 21, "context_end": 25,
-          "title": "WORKER MANUALLY CLEARING MATERIAL", "severity": "medium", "issue_type": "Worker Machine Proximity",
+          "id": "nano-5",
+          "timestamp_seconds": 24,
+          "timestamp_label": "00:24",
+          "context_start": 21,
+          "context_end": 25,
+          "title": "WORKER MANUALLY CLEARING MATERIAL",
+          "severity": "medium",
+          "issue_type": "Worker Machine Proximity",
           "visible_evidence": "Worker in yellow vest uses a tool to manually move material in container, indicating possible blockage requiring manual intervention.",
-          "subject_link": {"status": "linked", "label": "YOLO SUBJECT LINKED", "class": "PERSON", "confidence": 92.1, "detail": "PERSON · 92.1% detector confidence"},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 92.1,
+            "detail": "PERSON \u00b7 92.1% detector confidence"
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         }
       ]
     },
@@ -216,78 +350,269 @@
       "poster": "assets/videos/ling-3-2-flash.jpg",
       "observations": [
         {
-          "id": "ling-1", "timestamp_seconds": 0, "timestamp_label": "00:00", "context_start": 0, "context_end": 3,
-          "title": "LOADER DUMPING GRANULAR MATERIAL", "severity": "low", "issue_type": "Material Dumping Activity",
+          "id": "ling-1",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "LOADER DUMPING GRANULAR MATERIAL",
+          "severity": "low",
+          "issue_type": "Material Dumping Activity",
           "visible_evidence": "Yellow front-end loader bucket raised, discharging granular material into a hopper/conveyor area.",
-          "subject_link": {"status": "linked", "label": "YOLO SUBJECT LINKED", "class": "TRUCK", "confidence": 66.6, "detail": "TRUCK · 66.6% detector confidence"},
-          "corroboration": {"status": "corroborated", "label": "Corroborated", "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"}
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "TRUCK",
+            "confidence": 66.6,
+            "detail": "TRUCK \u00b7 66.6% detector confidence"
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
         },
         {
-          "id": "ling-2", "timestamp_seconds": 0, "timestamp_label": "00:00", "context_start": 0, "context_end": 3,
-          "title": "WORKER STANDING NEAR OPERATING LOADER", "severity": "medium", "issue_type": "Worker Machine Proximity",
+          "id": "ling-2",
+          "timestamp_seconds": 0,
+          "timestamp_label": "00:00",
+          "context_start": 0,
+          "context_end": 3,
+          "title": "WORKER STANDING NEAR OPERATING LOADER",
+          "severity": "medium",
+          "issue_type": "Worker Machine Proximity",
           "visible_evidence": "Person in orange high-visibility clothing is standing in close proximity to the active loader dumping operation.",
-          "subject_link": {"status": "unmatched", "label": "NO YOLO BOX ASSIGNED", "detail": "The available YOLO detections did not support a dedicated subject match for this observation."},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "unmatched",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "The available YOLO detections did not support a dedicated subject match for this observation."
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         },
         {
-          "id": "ling-3", "timestamp_seconds": 12, "timestamp_label": "00:12", "context_start": 9, "context_end": 15,
-          "title": "AIRBORNE DUST DURING MATERIAL TRANSFER", "severity": "medium", "issue_type": "Visible Dust Or Particulate",
+          "id": "ling-3",
+          "timestamp_seconds": 12,
+          "timestamp_label": "00:12",
+          "context_start": 9,
+          "context_end": 15,
+          "title": "AIRBORNE DUST DURING MATERIAL TRANSFER",
+          "severity": "medium",
+          "issue_type": "Visible Dust Or Particulate",
           "visible_evidence": "Visible airborne dust is present around the material-transfer equipment.",
-          "subject_link": {"status": "not_applicable", "label": "NO YOLO BOX ASSIGNED", "detail": "This visible condition is not a COCO object class recognised by the current YOLO model."},
-          "corroboration": {"status": "corroborated", "label": "Corroborated", "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"}
+          "subject_link": {
+            "status": "not_applicable",
+            "label": "NO YOLO BOX ASSIGNED",
+            "detail": "This visible condition is not a COCO object class recognised by the current YOLO model."
+          },
+          "corroboration": {
+            "status": "corroborated",
+            "label": "Corroborated",
+            "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
+          }
         },
         {
-          "id": "ling-4", "timestamp_seconds": 24, "timestamp_label": "00:24", "context_start": 21, "context_end": 25,
-          "title": "WORKER SHOVELING GRANULAR MATERIAL", "severity": "low", "issue_type": "Worker Machine Proximity",
+          "id": "ling-4",
+          "timestamp_seconds": 24,
+          "timestamp_label": "00:24",
+          "context_start": 21,
+          "context_end": 25,
+          "title": "WORKER SHOVELING GRANULAR MATERIAL",
+          "severity": "low",
+          "issue_type": "Worker Machine Proximity",
           "visible_evidence": "Worker in high-visibility vest, gloves, and face covering uses a shovel inside a bin of granular material.",
-          "subject_link": {"status": "linked", "label": "YOLO SUBJECT LINKED", "class": "PERSON", "confidence": 92.1, "detail": "PERSON · 92.1% detector confidence"},
-          "corroboration": {"status": "not_correlated", "label": "Not corroborated"}
+          "subject_link": {
+            "status": "linked",
+            "label": "YOLO SUBJECT LINKED",
+            "class": "PERSON",
+            "confidence": 92.1,
+            "detail": "PERSON \u00b7 92.1% detector confidence"
+          },
+          "corroboration": {
+            "status": "not_correlated",
+            "label": "Not corroborated"
+          }
         }
       ]
     }
   ],
   "comparison": {
     "weights": [
-      {"key": "yolo", "label": "YOLO subject alignment", "weight": 35, "description": "Share of eligible subject findings linked to a matching YOLO subject."},
-      {"key": "corroboration", "label": "Cross-model corroboration", "weight": 25, "description": "Share of findings also reported by another selected model within the time tolerance."},
-      {"key": "structure", "label": "Structured output completeness", "weight": 12, "description": "Share of findings with a valid title, issue category, and timestamp."},
-      {"key": "speed", "label": "Response speed", "weight": 12, "description": "Relative runtime; the fastest completed model receives the full score."},
-      {"key": "tokens", "label": "Token efficiency", "weight": 8, "description": "Relative token use; the lowest total token count receives the full score."},
-      {"key": "cost", "label": "Cost efficiency", "weight": 8, "description": "Included only when actual provider-reported cost is available for every completed model."}
+      {
+        "key": "yolo",
+        "label": "YOLO subject alignment",
+        "weight": 35,
+        "description": "Share of eligible subject findings linked to a matching YOLO subject."
+      },
+      {
+        "key": "corroboration",
+        "label": "Cross-model corroboration",
+        "weight": 25,
+        "description": "Share of findings also reported by another selected model within the time tolerance."
+      },
+      {
+        "key": "structure",
+        "label": "Structured output completeness",
+        "weight": 12,
+        "description": "Share of findings with a valid title, issue category, and timestamp."
+      },
+      {
+        "key": "speed",
+        "label": "Response speed",
+        "weight": 12,
+        "description": "Relative runtime; the fastest completed model receives the full score."
+      },
+      {
+        "key": "tokens",
+        "label": "Token efficiency",
+        "weight": 8,
+        "description": "Relative token use; the lowest total token count receives the full score."
+      },
+      {
+        "key": "cost",
+        "label": "Cost efficiency",
+        "weight": 8,
+        "description": "Included only when actual provider-reported cost is available for every completed model."
+      }
     ],
-    "ranked_model_ids": ["inclusionai/ling-3.2-flash:free", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", "nvidia/nemotron-3.5-super-vl:free"],
+    "ranked_model_ids": [
+      "inclusionai/ling-3.2-flash:free",
+      "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "nvidia/nemotron-3.5-super-vl:free"
+    ],
     "scores": {
       "inclusionai/ling-3.2-flash:free": {
-        "rank": "BEST", "score": 64.7, "findings_reported": 4,
-        "yolo": {"numerator": 2, "denominator": 3, "percent": 66.7, "points": 23.3},
-        "corroboration": {"numerator": 2, "denominator": 4, "percent": 50.0, "points": 12.5},
-        "structure": {"numerator": 4, "denominator": 4, "percent": 100.0, "points": 12.0},
-        "speed": {"latency_seconds": 32.45, "percent": 11.2, "points": 1.3},
-        "tokens": {"input": 1561, "output": 559, "total": 2120, "percent": 94.5, "points": 7.6},
-        "cost": {"usd": 0.0, "percent": 100.0, "points": 8.0}
+        "rank": "BEST",
+        "score": 64.7,
+        "findings_reported": 4,
+        "yolo": {
+          "numerator": 2,
+          "denominator": 3,
+          "percent": 66.7,
+          "points": 23.3
+        },
+        "corroboration": {
+          "numerator": 2,
+          "denominator": 4,
+          "percent": 50.0,
+          "points": 12.5
+        },
+        "structure": {
+          "numerator": 4,
+          "denominator": 4,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "speed": {
+          "latency_seconds": 32.45,
+          "percent": 11.2,
+          "points": 1.3
+        },
+        "tokens": {
+          "input": 1561,
+          "output": 559,
+          "total": 2120,
+          "percent": 94.5,
+          "points": 7.6
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0
+        }
       },
       "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
-        "rank": "BETTER", "score": 62.5, "findings_reported": 5,
-        "yolo": {"numerator": 3, "denominator": 5, "percent": 60.0, "points": 21.0},
-        "corroboration": {"numerator": 2, "denominator": 5, "percent": 40.0, "points": 10.0},
-        "structure": {"numerator": 5, "denominator": 5, "percent": 100.0, "points": 12.0},
-        "speed": {"latency_seconds": 8.65, "percent": 41.8, "points": 5.0},
-        "tokens": {"input": 1652, "output": 807, "total": 2459, "percent": 81.5, "points": 6.5},
-        "cost": {"usd": 0.0, "percent": 100.0, "points": 8.0}
+        "rank": "BETTER",
+        "score": 62.5,
+        "findings_reported": 5,
+        "yolo": {
+          "numerator": 3,
+          "denominator": 5,
+          "percent": 60.0,
+          "points": 21.0
+        },
+        "corroboration": {
+          "numerator": 2,
+          "denominator": 5,
+          "percent": 40.0,
+          "points": 10.0
+        },
+        "structure": {
+          "numerator": 5,
+          "denominator": 5,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "speed": {
+          "latency_seconds": 8.65,
+          "percent": 41.8,
+          "points": 5.0
+        },
+        "tokens": {
+          "input": 1652,
+          "output": 807,
+          "total": 2459,
+          "percent": 81.5,
+          "points": 6.5
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0
+        }
       },
       "nvidia/nemotron-3.5-super-vl:free": {
-        "rank": "GOOD", "score": 40.0, "findings_reported": 2,
-        "yolo": {"numerator": 0, "denominator": 2, "percent": 0.0, "points": 0.0},
-        "corroboration": {"numerator": 0, "denominator": 2, "percent": 0.0, "points": 0.0},
-        "structure": {"numerator": 2, "denominator": 2, "percent": 100.0, "points": 12.0},
-        "speed": {"latency_seconds": 3.62, "percent": 100.0, "points": 12.0},
-        "tokens": {"input": 1651, "output": 353, "total": 2004, "percent": 100.0, "points": 8.0},
-        "cost": {"usd": 0.0, "percent": 100.0, "points": 8.0}
+        "rank": "GOOD",
+        "score": 40.0,
+        "findings_reported": 2,
+        "yolo": {
+          "numerator": 0,
+          "denominator": 2,
+          "percent": 0.0,
+          "points": 0.0
+        },
+        "corroboration": {
+          "numerator": 0,
+          "denominator": 2,
+          "percent": 0.0,
+          "points": 0.0
+        },
+        "structure": {
+          "numerator": 2,
+          "denominator": 2,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "speed": {
+          "latency_seconds": 3.62,
+          "percent": 100.0,
+          "points": 12.0
+        },
+        "tokens": {
+          "input": 1651,
+          "output": 353,
+          "total": 2004,
+          "percent": 100.0,
+          "points": 8.0
+        },
+        "cost": {
+          "usd": 0.0,
+          "percent": 100.0,
+          "points": 8.0
+        }
       }
     },
     "shared_findings": [
-      {"label": "Material Dumping Activity", "timestamp_seconds": 0},
-      {"label": "Visible Dust Or Particulate", "timestamp_seconds": 12}
+      {
+        "label": "Material Dumping Activity",
+        "timestamp_seconds": 0
+      },
+      {
+        "label": "Visible Dust Or Particulate",
+        "timestamp_seconds": 12
+      }
     ],
     "method_note": "BEST, BETTER, and GOOD are relative rankings for this recorded run, not ground-truth accuracy labels. Model agreement is a consistency signal, not proof that an observation is true. If a criterion is unavailable for any completed model, that criterion is excluded for all models and the remaining weights are renormalised."
   }
