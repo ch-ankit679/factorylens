@@ -19,7 +19,7 @@
     "duration_seconds": 60.24,
     "url": "assets/videos/factory-input.mp4",
     "poster": "assets/videos/factory-input.jpg",
-    "size_label": "H.264 \u00b7 720p"
+    "size_label": "H.264 · 720p"
   },
   "inspection": {
     "job_id": "factorylens-recorded-inspection",
@@ -195,7 +195,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nem35-1.jpg"
         },
         {
           "id": "nem35-2",
@@ -215,7 +216,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nem35-2.jpg"
         }
       ]
     },
@@ -244,13 +246,14 @@
             "label": "YOLO SUBJECT LINKED",
             "class": "TRUCK",
             "confidence": 66.6,
-            "detail": "TRUCK \u00b7 66.6% detector confidence"
+            "detail": "TRUCK · 66.6% detector confidence"
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Ling 3.2 Flash"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-1.jpg"
         },
         {
           "id": "nano-2",
@@ -271,7 +274,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Ling 3.2 Flash"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-2.jpg"
         },
         {
           "id": "nano-3",
@@ -288,12 +292,13 @@
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
             "confidence": 80.0,
-            "detail": "PERSON \u00b7 80.0% detector confidence"
+            "detail": "PERSON · 80.0% detector confidence"
           },
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-3.jpg"
         },
         {
           "id": "nano-4",
@@ -313,7 +318,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-4.jpg"
         },
         {
           "id": "nano-5",
@@ -330,12 +336,13 @@
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
             "confidence": 92.1,
-            "detail": "PERSON \u00b7 92.1% detector confidence"
+            "detail": "PERSON · 92.1% detector confidence"
           },
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-5.jpg"
         }
       ]
     },
@@ -364,13 +371,14 @@
             "label": "YOLO SUBJECT LINKED",
             "class": "TRUCK",
             "confidence": 66.6,
-            "detail": "TRUCK \u00b7 66.6% detector confidence"
+            "detail": "TRUCK · 66.6% detector confidence"
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-1.jpg"
         },
         {
           "id": "ling-2",
@@ -390,7 +398,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-2.jpg"
         },
         {
           "id": "ling-3",
@@ -411,7 +420,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-3.jpg"
         },
         {
           "id": "ling-4",
@@ -428,12 +438,13 @@
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
             "confidence": 92.1,
-            "detail": "PERSON \u00b7 92.1% detector confidence"
+            "detail": "PERSON · 92.1% detector confidence"
           },
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-4.jpg"
         }
       ]
     }

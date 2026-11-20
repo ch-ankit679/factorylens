@@ -289,3 +289,12 @@ body.navigation-open{overflow:hidden}
   .score-proof-rank-row{grid-template-columns:18px minmax(0,1fr) auto}.score-proof-rank-row>small{grid-column:2/-1;text-align:left}
   .score-proof-comparison-table{font-size:8px}.score-proof-comparison-table th,.score-proof-comparison-table td{padding:7px 5px}
 }
+
+/* Criterion evidence frames: only shown for visual subject/corroboration checks. */
+.score-proof-visual{margin:10px 0 0;max-width:560px}
+.score-proof-visual img{display:block;width:100%;max-height:250px;object-fit:contain;object-position:left center;border:1px solid #405a60;border-radius:7px;background:#07161b}
+.score-proof-visual figcaption{margin-top:5px;color:#91aaa4;font-size:8px;line-height:1.4}
+.score-proof-peer-visuals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px;max-width:420px}
+.score-proof-peer-visuals figure{margin:0;min-width:0}
+.score-proof-peer-visuals img{display:block;width:100%;max-height:110px;object-fit:contain;object-position:left center;background:#07161b;border:1px solid #405a60;border-radius:5px}
+.score-proof-peer-visuals figcaption{margin-top:4px;color:#91aaa4;font-size:7px;line-height:1.3}

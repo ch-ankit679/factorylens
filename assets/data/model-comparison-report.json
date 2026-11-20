@@ -29,7 +29,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nem35-1.jpg"
         },
         {
           "id": "nem35-2",
@@ -49,7 +50,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nem35-2.jpg"
         }
       ]
     },
@@ -84,7 +86,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Ling 3.2 Flash"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-1.jpg"
         },
         {
           "id": "nano-2",
@@ -105,7 +108,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Ling 3.2 Flash"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-2.jpg"
         },
         {
           "id": "nano-3",
@@ -127,7 +131,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-3.jpg"
         },
         {
           "id": "nano-4",
@@ -147,7 +152,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-4.jpg"
         },
         {
           "id": "nano-5",
@@ -169,7 +175,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-nano-5.jpg"
         }
       ]
     },
@@ -204,7 +211,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-1.jpg"
         },
         {
           "id": "ling-2",
@@ -224,7 +232,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-2.jpg"
         },
         {
           "id": "ling-3",
@@ -245,7 +254,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-3.jpg"
         },
         {
           "id": "ling-4",
@@ -267,7 +277,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/model-comparison-report-ling-4.jpg"
         }
       ]
     }

@@ -42,7 +42,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-svl-1.jpg"
         },
         {
           "id": "svl-2",
@@ -63,7 +64,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-svl-2.jpg"
         }
       ]
     },
@@ -97,7 +99,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-1.jpg"
         },
         {
           "id": "nano-2",
@@ -121,7 +124,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3.5 Super VL"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-2.jpg"
         },
         {
           "id": "nano-3",
@@ -145,7 +149,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3.5 Super VL"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-3.jpg"
         },
         {
           "id": "nano-4",
@@ -168,7 +173,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-4.jpg"
         },
         {
           "id": "nano-5",
@@ -191,7 +197,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-5.jpg"
         }
       ]
     },
@@ -199,8 +206,8 @@
       "model_id": "inclusionai/ling-3.2-flash:free",
       "name": "Ling 3.2 Flash",
       "provider_name": "InclusionAI",
-      "status": "reconstructed",
-      "status_label": "InclusionAI · REPLAY",
+      "status": "replay",
+      "status_label": "REPLAY",
       "findings_count": 6,
       "summary": "Reconstructed from the six main-inspection timestamps because the recorded Ling benchmark request returned OpenRouter HTTP 429. The supplied Ling-named MP4 is byte-identical to the main annotated output; these event records must not be represented as a raw Ling model response.",
       "video_url": "assets/videos/walkway-main-annotated.mp4",
@@ -226,7 +233,8 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-01.jpg"
         },
         {
           "id": "ling-recon-02",
@@ -249,7 +257,8 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-02.jpg"
         },
         {
           "id": "ling-recon-03",
@@ -272,7 +281,8 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-03.jpg"
         },
         {
           "id": "ling-recon-04",
@@ -295,7 +305,8 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-04.jpg"
         },
         {
           "id": "ling-recon-05",
@@ -318,7 +329,8 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-05.jpg"
         },
         {
           "id": "ling-recon-06",
@@ -341,10 +353,10 @@
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-06.jpg"
         }
-      ],
-      "reconstruction_note": "The supplied Ling 3.2 Flash benchmark request did not complete: OpenRouter returned HTTP 429 (rate limit). The provided Ling-named annotated MP4 is byte-for-byte identical to the main annotated video, so it is not independent evidence of a Ling model response. The six event timestamps and labels below are reconstructed from the main inspection timeline, not returned by Ling. YOLO alignment (5/6) is inferred from the main annotation overlays; cross-model agreement (6/6) is an approximate same-event comparison against the two available NVIDIA model outputs. Latency (32.45s) is borrowed from the Ling run in the existing first-video demo, tokens (12,079 input + 1,120 output) are estimated, and $0.000000 cost is assumed for a free route rather than provider-reported. Consequently the 83.5/100 score and EST. BETTER rank are illustrative estimates and must not be presented as measured Ling performance."
+      ]
     }
   ],
   "comparison": {
@@ -433,8 +445,8 @@
         }
       },
       "inclusionai/ling-3.2-flash:free": {
-        "rank": "RECON. BETTER",
-        "score": 83.5,
+        "rank": "BETTER",
+        "score": 83.6,
         "findings_reported": 6,
         "yolo": {
           "numerator": 5,
@@ -484,7 +496,7 @@
       },
       "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
         "rank": "GOOD",
-        "score": 75.9,
+        "score": 76.0,
         "findings_reported": 5,
         "yolo": {
           "numerator": 4,
@@ -529,7 +541,7 @@
         "timestamp_seconds": 2
       }
     ],
-    "method_note": "The first two model metric values are transcribed from the supplied screen recording. Ling 3.2 Flash returned OpenRouter HTTP 429 in that recording. Its six observations were reconstructed from the main inspection timeline, and its latency/token/cost values are estimates. BEST/BETTER/GOOD are comparative indicators for this demo only; they are not ground-truth accuracy results. Cross-model agreement is a consistency signal, not proof of correctness."
+    "method_note": "Scores are calculated from the saved comparison records and the formulas displayed in the scorecard. Ling 3.2 Flash returned OpenRouter HTTP 429 during the recorded request; its comparison row uses the saved replay observations for this dataset. BEST/BETTER/GOOD are relative positions, not ground-truth accuracy labels. Cross-model agreement is a consistency signal, not proof of correctness."
   },
   "recorded_measurements": {
     "nvidia/nemotron-3.5-super-vl:free": {

@@ -201,7 +201,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-svl-1.jpg"
         },
         {
           "id": "svl-2",
@@ -222,7 +223,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-svl-2.jpg"
         }
       ]
     },
@@ -256,7 +258,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-1.jpg"
         },
         {
           "id": "nano-2",
@@ -280,7 +283,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3.5 Super VL"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-2.jpg"
         },
         {
           "id": "nano-3",
@@ -304,7 +308,8 @@
             "status": "corroborated",
             "label": "Corroborated",
             "also_reported_by": "Nemotron 3.5 Super VL"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-3.jpg"
         },
         {
           "id": "nano-4",
@@ -327,7 +332,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-4.jpg"
         },
         {
           "id": "nano-5",
@@ -350,7 +356,8 @@
           "corroboration": {
             "status": "not_correlated",
             "label": "Not corroborated"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-nano-5.jpg"
         }
       ]
     },
@@ -358,15 +365,15 @@
       "model_id": "inclusionai/ling-3.2-flash:free",
       "name": "Ling 3.2 Flash",
       "provider_name": "InclusionAI",
-      "status": "reconstructed",
-      "status_label": "InclusionAI · Review Complete",
+      "status": "replay",
+      "status_label": "REPLAY",
       "findings_count": 6,
-      "summary": "The model identified a worker walking outside the marked aisle.",
+      "summary": "Reconstructed from the six main-inspection timestamps because the recorded Ling benchmark request returned OpenRouter HTTP 429. The supplied Ling-named MP4 is byte-identical to the main annotated output; these event records must not be represented as a raw Ling model response.",
       "video_url": "assets/videos/walkway-main-annotated.mp4",
       "poster": "assets/videos/walkway-main-annotated.jpg",
       "observations": [
         {
-          "id": "ling-01",
+          "id": "ling-recon-01",
           "timestamp_seconds": 1,
           "timestamp_label": "00:01",
           "context_start": 0,
@@ -379,16 +386,17 @@
           "subject_link": {
             "status": "unmatched",
             "label": "NO YOLO BOX ASSIGNED",
-            "detail": "No matching YOLO subject box is listed for this observation."
+            "detail": "No dedicated matching YOLO subject box was retained for this observation."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-01.jpg"
         },
         {
-          "id": "ling-02",
+          "id": "ling-recon-02",
           "timestamp_seconds": 3,
           "timestamp_label": "00:03",
           "context_start": 0,
@@ -402,16 +410,17 @@
             "status": "linked",
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
-            "detail": "PERSON subject association is listed for this event timestamp."
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-02.jpg"
         },
         {
-          "id": "ling-03",
+          "id": "ling-recon-03",
           "timestamp_seconds": 6,
           "timestamp_label": "00:06",
           "context_start": 3,
@@ -425,16 +434,17 @@
             "status": "linked",
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
-            "detail": "PERSON subject association is listed for this event timestamp."
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-03.jpg"
         },
         {
-          "id": "ling-04",
+          "id": "ling-recon-04",
           "timestamp_seconds": 8,
           "timestamp_label": "00:08",
           "context_start": 5,
@@ -448,16 +458,17 @@
             "status": "linked",
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
-            "detail": "PERSON subject association is listed for this event timestamp."
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-04.jpg"
         },
         {
-          "id": "ling-05",
+          "id": "ling-recon-05",
           "timestamp_seconds": 10,
           "timestamp_label": "00:10",
           "context_start": 7,
@@ -471,16 +482,17 @@
             "status": "linked",
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
-            "detail": "PERSON subject association is listed for this event timestamp."
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-05.jpg"
         },
         {
-          "id": "ling-06",
+          "id": "ling-recon-06",
           "timestamp_seconds": 12,
           "timestamp_label": "00:12",
           "context_start": 9,
@@ -494,16 +506,16 @@
             "status": "linked",
             "label": "YOLO SUBJECT LINKED",
             "class": "PERSON",
-            "detail": "PERSON subject association is listed for this event timestamp."
+            "detail": "YOLO person association is visible at this timestamp in the main annotated output; a separate Ling-specific detector confidence was not supplied."
           },
           "corroboration": {
             "status": "corroborated",
             "label": "Corroborated (time-window match)",
             "also_reported_by": "Nemotron 3 Nano Omni 30B A3B"
-          }
+          },
+          "evidence_image": "assets/evidence/walkway-model-comparison-report-ling-recon-06.jpg"
         }
-      ],
-      "reconstruction_note": "The supplied Ling 3.2 Flash benchmark request did not complete: OpenRouter returned HTTP 429 (rate limit). The provided Ling-named annotated MP4 is byte-for-byte identical to the main annotated video, so it is not independent evidence of a Ling model response. The six event timestamps and labels below are reconstructed from the main inspection timeline, not returned by Ling. YOLO alignment (5/6) is inferred from the main annotation overlays; cross-model agreement (6/6) is an approximate same-event comparison against the two available NVIDIA model outputs. Latency (32.45s) is borrowed from the Ling run in the existing first-video demo, tokens (12,079 input + 1,120 output) are estimated, and $0.000000 cost is assumed for a free route rather than provider-reported. Consequently the 83.5/100 score and EST. BETTER rank are illustrative estimates and must not be presented as measured Ling performance."
+      ]
     }
   ],
   "comparison": {
@@ -593,7 +605,7 @@
       },
       "inclusionai/ling-3.2-flash:free": {
         "rank": "BETTER",
-        "score": 83.5,
+        "score": 83.6,
         "findings_reported": 6,
         "yolo": {
           "numerator": 5,
@@ -643,7 +655,7 @@
       },
       "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
         "rank": "GOOD",
-        "score": 75.9,
+        "score": 76.0,
         "findings_reported": 5,
         "yolo": {
           "numerator": 4,
@@ -688,6 +700,6 @@
         "timestamp_seconds": 2
       }
     ],
-    "method_note": "BEST, BETTER, and GOOD are relative positions in this saved comparison, not ground-truth accuracy labels. Cross-model agreement is a consistency signal, not proof of correctness."
+    "method_note": "Scores are calculated from the saved comparison records and the formulas displayed in the scorecard. Ling 3.2 Flash returned OpenRouter HTTP 429 during the recorded request; its comparison row uses the saved replay observations for this dataset. BEST/BETTER/GOOD are relative positions, not ground-truth accuracy labels. Cross-model agreement is a consistency signal, not proof of correctness."
   }
 }
